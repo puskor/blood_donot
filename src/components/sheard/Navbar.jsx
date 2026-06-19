@@ -39,8 +39,8 @@ export default function Navbar() {
                                 key={link.name}
                                 href={link.path}
                                 className={`text-sm font-medium transition-colors font-inter ${isActive
-                                        ? 'text-rose-600 font-semibold'
-                                        : 'text-slate-600 hover:text-rose-600'
+                                    ? 'text-rose-600 font-semibold'
+                                    : 'text-slate-600 hover:text-rose-600'
                                     }`}
                             >
                                 {link.name}
@@ -61,5 +61,8 @@ export default function Navbar() {
 
             </div>
         </header>
+
+
+
     );
 }

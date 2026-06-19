@@ -1,11 +1,17 @@
+import Footer from '@/components/sheard/Footer';
+import Navbar from '@/components/sheard/Navbar';
 import React from 'react';
 
-const MainLayout = ({children}) => {
+const MainLayout = ({ children }) => {
     return (
-        <div className='bg-pink-200'>
-            {
-                children
-            }
+        <div>
+            <Navbar/>
+            <div className='bg-pink-100'>
+                {
+                    children
+                }
+            </div>
+            <Footer/>
         </div>
     );
 };
