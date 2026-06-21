@@ -11,7 +11,7 @@ const Donor = () => {
                 <SearchDonors />
             </div>
 
-            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10 gap-4 mx-2 md:mx-4 lg:mx-8' >
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10 gap-4 mx-2' >
                 <DonorCard />
                 <DonorCard />
                 <DonorCard />
