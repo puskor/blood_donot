@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FaDroplet, FaCloudArrowUp } from 'react-icons/fa6';
+import { signUp } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
+import { uploadImage } from '@/lib/uploadImage';
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -15,6 +18,8 @@ export default function SignUp() {
         confirmPassword: '',
         agreeToTerms: false,
     });
+
+    const router = useRouter()
 
     const [avatar, setAvatar] = useState(null);
 
@@ -32,9 +37,40 @@ export default function SignUp() {
         }
     };
 
-    const handleSubmit = (e) => {
+ 
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitted Registration Data:', formData, avatar);
+
+        if (formData.password !== formData.confirmPassword) {
+            return alert("Passwords do not match");
+        }
+
+        try {
+            let avatarUrl = "";
+
+            if (avatar) {
+                avatarUrl = await uploadImage(avatar);
+            }
+
+            const { data, error } = await signUp.email({
+                email: formData.email,
+                password: formData.password,
+                name: formData.name,
+                image: avatarUrl,
+            });
+
+            if (error) {
+                console.log(error);
+                return alert(error.message);
+            }
+
+            console.log(data);
+
+            router.push("/dashboard");
+        } catch (err) {
+            console.error(err);
+            alert("Registration failed");
+        }
     };
 
     return (

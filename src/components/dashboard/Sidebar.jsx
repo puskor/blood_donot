@@ -1,14 +1,16 @@
 "use client";
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { RxDashboard } from 'react-icons/rx';
 import { FiUser, FiUsers, FiFileText } from 'react-icons/fi';
 import { AiOutlineDollar } from 'react-icons/ai';
 import { IoLogOutOutline } from 'react-icons/io5';
+import { authClient } from '@/lib/auth-client';
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const router = useRouter()
 
     // ডিজাইন সিস্টেমের সাইডবার মেনু অপশন সমূহ
     const menuItems = [
@@ -39,7 +41,10 @@ export default function Sidebar() {
         },
     ];
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        await authClient.signOut();
+        router.push("/")
+
         console.log('Logging out from dashboard context panel...');
     };
 

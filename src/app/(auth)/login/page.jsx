@@ -5,8 +5,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaDroplet } from 'react-icons/fa6';
 import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi';
+import { signIn } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
+
 
 export default function Login() {
+
+    const router = useRouter()
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -22,9 +27,22 @@ export default function Login() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitted Login Data:', formData);
+        const { data, error } = await signIn.email({
+            email: formData.email,
+            password: formData.password
+        })
+
+        if (data) {
+            alert("login successfully")
+            router.push("/dashboard")
+        }
+        if (error) {
+            alert("something is wrong")
+        }
+        console.log(data)
+        // console.log('Submitted Login Data:', formData);
     };
 
     return (
