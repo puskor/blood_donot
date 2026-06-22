@@ -44,7 +44,7 @@ export default function DonorCard({ donor }) {
             {/* Router Link Handler Controller Target Trigger CTA Link */}
             <div className="w-full mt-6">
                 <Link
-                    href={`/donors/${id}`}
+                    href={`/dashboard/donor/donor_list/${id}`}
                     className="block w-full text-center py-2.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all font-inter shadow-sm"
                 >
                     View Profile

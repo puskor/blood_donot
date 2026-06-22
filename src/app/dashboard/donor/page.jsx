@@ -5,8 +5,8 @@ import React from 'react';
 const Donor = () => {
     return (
         <div>
-            <div className='pt-10'>
-                <h1 className='text-2xl md:text-4xl lg:text-5xl pb-10 font-bold text-center'>All Donor</h1>
+            <div >
+                <h1 className='text-xl md:text-xl lg:text-3xl pb-5 font-bold text-center'>All Donor</h1>
 
                 <SearchDonors />
             </div>

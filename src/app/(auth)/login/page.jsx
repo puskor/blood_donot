@@ -41,7 +41,7 @@ export default function Login() {
         if (error) {
             alert("something is wrong")
         }
-        console.log(data)
+        // console.log(data)
         // console.log('Submitted Login Data:', formData);
     };
 
