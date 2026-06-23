@@ -6,12 +6,15 @@ import { FaDroplet, FaCloudArrowUp } from 'react-icons/fa6';
 import { signUp } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { uploadImage } from '@/lib/uploadImage';
+import { UserDetailsPost } from '@/lib/action/post/userDetails';
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
         name: '',
         bloodGroup: '',
         email: '',
+        phone: '',
+        division: '',
         district: '',
         upazila: '',
         password: '',
@@ -19,12 +22,22 @@ export default function SignUp() {
         agreeToTerms: false,
     });
 
-    const router = useRouter()
-
+    const router = useRouter();
     const [avatar, setAvatar] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
+
+        // ফোন নম্বরের জন্য শুধু মাত্র ডিজিট (0-9) ফিল্টার করা
+        if (name === 'phone') {
+            const onlyNums = value.replace(/[^0-9]/g, '');
+            setFormData((prev) => ({
+                ...prev,
+                [name]: onlyNums,
+            }));
+            return;
+        }
+
         setFormData((prev) => ({
             ...prev,
             [name]: type === 'checkbox' ? checked : value,
@@ -37,12 +50,15 @@ export default function SignUp() {
         }
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
             return alert("Passwords do not match");
+        }
+
+        if (formData.phone.length !== 11) {
+            return alert("Phone number must be exactly 11 digits");
         }
 
         try {
@@ -57,6 +73,7 @@ export default function SignUp() {
                 password: formData.password,
                 name: formData.name,
                 image: avatarUrl,
+
             });
 
             if (error) {
@@ -64,9 +81,28 @@ export default function SignUp() {
                 return alert(error.message);
             }
 
-            console.log(data);
+            const details = {
+                userId: data?.user?.id || data?.id, // অথ লাইব্রেরি থেকে জেনারেট হওয়া ইউনিক আইডি
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                bloodGroup: formData.bloodGroup,
+                division: formData.division,
+                district: formData.district,
+                upazila: formData.upazila,
+                image: avatarUrl,
+                createdAt: new Date()
+            }
 
-            router.push("/dashboard");
+            const serverResult = await UserDetailsPost(details);
+
+            if (serverResult.success) {
+                console.log("Database Sync Successful:", serverResult);
+                router.push("/dashboard");
+            } else {
+                alert(serverResult.message || "Auth cleared but DB sync failed.");
+            }
+            
         } catch (err) {
             console.error(err);
             alert("Registration failed");
@@ -122,7 +158,7 @@ export default function SignUp() {
                                 value={formData.bloodGroup}
                                 onChange={handleInputChange}
                                 required
-                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer"
+                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-880 bg-white font-medium transition-all appearance-none cursor-pointer"
                             >
                                 <option value="" disabled>Select Blood Group</option>
                                 <option value="A+">A+</option>
@@ -150,6 +186,40 @@ export default function SignUp() {
                             />
                         </div>
 
+                        {/* Phone Number Input (Only Numbers Allowed) */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-700 tracking-wide">Phone Number</label>
+                            <input
+                                type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleInputChange}
+                                placeholder="Enter 11 digit number"
+                                minLength={11}
+                                maxLength={11}
+                                required
+                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 placeholder-slate-300 transition-all font-medium text-slate-800"
+                            />
+                        </div>
+
+                        {/* Division Select Box */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-700 tracking-wide">Division</label>
+                            <select
+                                name="division"
+                                value={formData.division}
+                                onChange={handleInputChange}
+                                required
+                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer"
+                            >
+                                <option value="" disabled>Select Division</option>
+                                <option value="Dhaka">Dhaka</option>
+                                <option value="Chattogram">Chattogram</option>
+                                <option value="Rajshahi">Rajshahi</option>
+                                <option value="Sylhet">Sylhet</option>
+                            </select>
+                        </div>
+
                         {/* District Select Box */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">District</label>
@@ -167,21 +237,6 @@ export default function SignUp() {
                             </select>
                         </div>
 
-                        {/* Avatar Input File Uploader */}
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-700 tracking-wide">Avatar</label>
-                            <label className="w-full h-11 border border-dashed border-slate-200 hover:border-rose-600 rounded-xl px-4 flex items-center justify-start gap-2.5 cursor-pointer bg-white transition-colors group">
-                                <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-                                <FaCloudArrowUp className="h-4 w-4 text-rose-600 shrink-0 group-hover:scale-105 transition-transform" />
-                                <div className="flex flex-col text-left truncate">
-                                    <span className="text-xs font-bold text-rose-600 truncate">
-                                        {avatar ? avatar.name : 'Upload Photo'}
-                                    </span>
-                                    <span className="text-[10px] text-slate-400 font-medium">PNG, JPG up to 2MB</span>
-                                </div>
-                            </label>
-                        </div>
-
                         {/* Upazila Select Box */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Upazila</label>
@@ -197,6 +252,21 @@ export default function SignUp() {
                                 <option value="Agrabad">Agrabad</option>
                                 <option value="Zindabazar">Zindabazar</option>
                             </select>
+                        </div>
+
+                        {/* Avatar Input File Uploader */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-700 tracking-wide">Avatar</label>
+                            <label className="w-full h-11 border border-dashed border-slate-200 hover:border-rose-600 rounded-xl px-4 flex items-center justify-start gap-2.5 cursor-pointer bg-white transition-colors group">
+                                <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                                <FaCloudArrowUp className="h-4 w-4 text-rose-600 shrink-0 group-hover:scale-105 transition-transform" />
+                                <div className="flex flex-col text-left truncate">
+                                    <span className="text-xs font-bold text-rose-600 truncate">
+                                        {avatar ? avatar.name : 'Upload Photo'}
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 font-medium">PNG, JPG up to 2MB</span>
+                                </div>
+                            </label>
                         </div>
 
                         {/* Password Input */}
