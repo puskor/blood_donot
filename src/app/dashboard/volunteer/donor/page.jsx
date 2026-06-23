@@ -7,7 +7,6 @@ const Donor = () => {
         <div>
             <SearchDonors/>
             <DonorCard/>
-            
         </div>
     );
 };

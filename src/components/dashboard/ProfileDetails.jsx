@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-export default function UserProfile({ user }) {
+export default function ProfileDetails({ user }) {
   // ডাটা সেফটি ফলব্যাক (Props থেকে ডাটা না আসলে যেন ক্র্যাশ না করে)
   const userData = user || {
     name: "Rasel Ahmed",

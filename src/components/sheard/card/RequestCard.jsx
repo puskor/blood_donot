@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { MapPin, Calendar } from 'lucide-react';
 
 
-const RequestCard = ({req}) => {
+const RequestCard = ({ req }) => {
     // console.log(req)
     return (
         <div key={req.id} className="bg-white rounded-2xl border border-slate-100 p-6 flex flex-col justify-between relative shadow-sm hover:shadow-md transition-shadow">
@@ -34,7 +34,7 @@ const RequestCard = ({req}) => {
 
             <div className="mt-6">
                 <Link
-                    href={`/requests/${req.id}`}
+                    href={`/dashboard/donor/request/${req.id}`}
                     className="block w-full text-center py-2.5 bg-white border border-slate-200 text-slate-700 font-semibold text-xs rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all font-inter"
                 >
                     View Details

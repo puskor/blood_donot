@@ -52,13 +52,13 @@ export default function Sidebar() {
             icon: FiUser,
         },
         {
-            name: 'Users',
-            path: '/dashboard/users',
+            name: 'Donor',
+            path: '/dashboard/admin/donor',
             icon: FiUsers,
         },
         {
             name: 'Donation Requests',
-            path: '/dashboard/requests',
+            path: '/dashboard/admin/request',
             icon: FiFileText,
         },
         {
