@@ -3,15 +3,28 @@
 import Image from 'next/image';
 import { FiMail, FiPhone, FiMapPin, FiCalendar, FiEdit3, FiLogOut } from 'react-icons/fi';
 
-// এখানে onEditClick এবং onLogout প্রপ্স দুটি গ্রহণ করা হলো
-export default function ProfileCard({ user, onEditClick, onLogout }) {
+export default function ProfileCard({ user = {}, onEditClick, onLogout }) {
+
+    // রিয়েল ডেটা ফলব্যাক (যদি প্রপ্স থেকে ডেটা না আসে বা আনডিফাইন্ড থাকে)
+    const bloodGroup = user.bloodGroup || "AB+";
+    const name = user.name || "donor8";
+    const email = user.email || "d8@gmail.com";
+    const phone = user.phone || "01315100000";
+    const image = user.image || "https://i.ibb.co/vvmDL7nL/IMG-20241102-020717.jpg";
+    const createdAt = user.createdAt || "2026-06-24T07:09:55.404Z";
+    const role = user.role || "donor";
+
+    // ঠিকানা তৈরি করার লজিক
+    const upazila = user.upazila || "Trishal";
+    const district = user.district || "Mymensingh";
+    const division = user.division || "Mymensingh";
 
     // ISO Date বা নরমাল ডেট ফরম্যাট সুন্দর করার লজিক
     const formatDate = (dateString) => {
         if (!dateString) return '';
         try {
             const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString; // যদি অলরেডি ফরম্যাটেড টেক্সট হয়
+            if (isNaN(date.getTime())) return dateString;
             return date.toLocaleDateString('en-GB', {
                 day: 'numeric',
                 month: 'short',
@@ -26,15 +39,15 @@ export default function ProfileCard({ user, onEditClick, onLogout }) {
         <div className="w-full bg-white border border-slate-100 rounded-2xl p-6 shadow-sm flex flex-col items-center relative">
             {/* Blood Group Badge Top-Right */}
             <div className="absolute top-6 right-6 flex flex-col items-center justify-center border border-rose-100 rounded-full w-14 h-14 bg-rose-50/40">
-                <span className="text-sm font-extrabold text-rose-600 font-poppins leading-none">{user.bloodGroup}</span>
+                <span className="text-sm font-extrabold text-rose-600 font-poppins leading-none">{bloodGroup}</span>
                 <span className="text-[7px] font-bold text-slate-400 mt-0.5 uppercase tracking-wider">Blood</span>
             </div>
 
             {/* Avatar */}
             <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-rose-100 relative mt-4 shadow-sm bg-slate-50">
                 <Image
-                    src={user.image}
-                    alt={user.name}
+                    src={image}
+                    alt={name}
                     fill
                     className="object-cover"
                     unoptimized
@@ -42,29 +55,29 @@ export default function ProfileCard({ user, onEditClick, onLogout }) {
             </div>
 
             <h2 className="text-lg font-bold text-slate-900 font-poppins mt-4 tracking-tight">
-                {user.name}
+                {name}
             </h2>
             <span className="text-[10px] font-extrabold text-rose-600 bg-rose-50 border border-rose-100 px-2.5 py-0.5 rounded-md uppercase tracking-wider mt-1.5">
-                {user.role}
+                {role}
             </span>
 
             {/* User Information Matrix Details */}
             <div className="w-full mt-8 space-y-3.5 border-t border-slate-100 pt-6">
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-600 font-medium">
                     <FiMail className="h-4 w-4 text-slate-400 shrink-0" />
-                    <span className="truncate">{user.email}</span>
+                    <span className="truncate">{email}</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-600 font-medium">
                     <FiPhone className="h-4 w-4 text-slate-400 shrink-0" />
-                    <span>{user.phone}</span>
+                    <span>{phone}</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-600 font-medium">
                     <FiMapPin className="h-4 w-4 text-slate-400 shrink-0" />
-                    <span className="truncate">{`${user.upazila}, ${user.district}, ${user.division}`}</span>
+                    <span className="truncate">{`${upazila}, ${district}, ${division}`}</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-600 font-medium">
                     <FiCalendar className="h-4 w-4 text-slate-400 shrink-0" />
-                    <span>Joined: {formatDate(user.createdAt)}</span>
+                    <span>Joined: {formatDate(createdAt)}</span>
                 </div>
             </div>
 
@@ -74,7 +87,7 @@ export default function ProfileCard({ user, onEditClick, onLogout }) {
                 {/* Edit Button */}
                 <button
                     type="button"
-                    onClick={onEditClick} // এখানে ক্লিক করলে মেইন পেজের মডাল স্টেট true হবে
+                    onClick={onEditClick}
                     className="flex items-center justify-center gap-2 h-10 border border-slate-200 hover:border-slate-300 text-slate-700 font-bold text-xs rounded-xl transition-all font-poppins active:scale-[0.98] bg-white hover:bg-slate-50"
                 >
                     <FiEdit3 className="h-3.5 w-3.5 text-slate-500" />
@@ -84,7 +97,7 @@ export default function ProfileCard({ user, onEditClick, onLogout }) {
                 {/* Logout Button */}
                 <button
                     type="button"
-                    onClick={onLogout} // এখানে ক্লিক করলে লগআউট ফাংশন কাজ করবে
+                    onClick={onLogout}
                     className="flex items-center justify-center gap-2 h-10 bg-rose-50 hover:bg-rose-100 border border-rose-100 text-rose-600 font-bold text-xs rounded-xl transition-all font-poppins active:scale-[0.98]"
                 >
                     <FiLogOut className="h-3.5 w-3.5" />

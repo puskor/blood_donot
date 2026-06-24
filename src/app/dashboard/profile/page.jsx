@@ -8,11 +8,11 @@ const Profile = async() => {
     const userId = user?.id
 
     const userDetails = await GetUserDetailsById(userId)
-    console.log(userDetails);
+    // console.log(userDetails);
     
     return (
         <div>
-            <ProfilePage />
+            <ProfilePage userDetails={userDetails}/>
         </div>
     );
 };

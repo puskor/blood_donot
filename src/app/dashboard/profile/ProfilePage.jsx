@@ -4,33 +4,31 @@ import MyDonationsTable from '@/components/dashboard/profile/MyDonationsTable';
 import MyRequestsTable from '@/components/dashboard/profile/MyRequestsTable';
 import ProfileCard from '@/components/dashboard/profile/ProfileCard';
 import AddRequestModal from '@/components/dashboard/profile/AddRequestModal';
+import EditProfileModal from '@/components/dashboard/profile/EditProfileModal'; // ১. এডিট মডালটি ইম্পোর্ট করা হলো
 import { useState } from 'react';
 import { FaDroplet, FaHandHoldingHand, FaPlus } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
-import { useSession } from '@/lib/auth-client';
 
-export default function ProfilePage() {
-    // const {data:session} = useSession()
+export default function ProfilePage(userDetails) {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('requests');
     const [isModalOpen, setIsModalOpen] = useState(false); // এড রিকোয়েস্ট মডাল স্টেট
-    // const userId = session?.user?.id ;
-    // console.log(userId) ;
-
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ২. এডিট প্রোফাইল মডাল স্টেট
 
     // ৩. ইউজারের ডেটাকে রিঅ্যাক্ট স্টেটে নেওয়া হলো যেন এডিট করলে সাথে সাথে UI-তে আপডেট দেখায়
     const [userData, setUserData] = useState({
-        userId: "6a3a7aadc92dc921989ab98f", // আপনার আগের প্রোভাইড করা আইডি ফরম্যাট
-        name: "Rasel Ahmed",
-        email: "donor1@gmail.com",
-        phone: "01712345678",
-        bloodGroup: "O+",
-        division: "Dhaka",
-        district: "Dhaka",
-        upazila: "Dhanmondi",
-        image: "https://i.ibb.co/ymcG1wz0/Screenshot-2026-06-21-at-9-39-03-AM.png",
-        role: "donor",
-        createdAt: "2026-06-22T12:23:09.481Z"
+        ...userDetails
+        // userId: "6a3a7aadc92dc921989ab98f", // আপনার আগের প্রোভাইড করা আইডি ফরম্যাট
+        // name: "Rasel Ahmed",
+        // email: "donor1@gmail.com",
+        // phone: "01712345678",
+        // bloodGroup: "O+",
+        // division: "Dhaka",
+        // district: "Dhaka",
+        // upazila: "Dhanmondi",
+        // image: "https://i.ibb.co/ymcG1wz0/Screenshot-2026-06-21-at-9-39-03-AM.png",
+        // role: "donor",
+        // createdAt: "2026-06-22T12:23:09.481Z"
     });
 
     // লোকাল রিঅ্যাক্ট স্টেট রিকোয়েস্টের জন্য
@@ -156,7 +154,13 @@ export default function ProfilePage() {
                 onSubmit={handleAddRequestSubmit}
             />
 
-          
+            {/* ২. এডিট প্রোফাইল পপআপ মডাল (নতুন যুক্ত করা হয়েছে) */}
+            <EditProfileModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                userData={userData}
+                onUpdateComplete={handleProfileUpdateComplete}
+            />
         </div>
     );
 }

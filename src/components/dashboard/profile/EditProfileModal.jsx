@@ -7,7 +7,9 @@ import { bdGeographicData } from '@/lib/data/bd-data';
 import { uploadImage } from '@/lib/uploadImage'; // আপনার ইমেজ আপলোড ফাংশন
 import { UserDetailsPost } from '@/lib/action/post/userDetails'; // আপনার ডাটাবেজ আপডেট অ্যাকশন
 
-export default function EditProfileModal({ isOpen, onClose, user, onUpdateComplete }) {
+export default function EditProfileModal({ isOpen, onClose, userData, onUpdateComplete }) {
+    console.log("user",userData);
+    const user = userData.userDetails
     const [formData, setFormData] = useState({
         name: '',
         bloodGroup: '',
