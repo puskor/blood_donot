@@ -7,7 +7,9 @@ import { useState } from 'react';
 import { FaDroplet, FaHandHoldingHand, FaPlus } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 
-export default function DonorDashboard() {
+export default function DonorDashboard(requestData) {
+    const requests = requestData.requestData
+    // console.log(requests)
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('requests');
     const [isModalOpen, setIsModalOpen] = useState(false); // এড রিকোয়েস্ট মডাল স্টেট
@@ -20,10 +22,7 @@ export default function DonorDashboard() {
     // });
 
     // লোকাল রিঅ্যাক্ট স্টেট রিকোয়েস্টের জন্য
-    const [myRequests, setMyRequests] = useState([
-        { id: 1, patientName: "Sumon Ali", bloodGroup: "O+", hospital: "Square Hospital", date: "25 June, 2026", status: "Pending" },
-        { id: 2, patientName: "Karim Uddin", bloodGroup: "O+", hospital: "Dhaka Medical", date: "10 May, 2026", status: "Completed" },
-    ]);
+    const [myRequests, setMyRequests] = useState(requests);
 
     const myDonations = [
         { id: 1, recipientName: "Abir Hossain", date: "12 Feb, 2026", location: "Enam Medical", status: "Successful" },
@@ -45,20 +44,7 @@ export default function DonorDashboard() {
         console.log("Newly Saved Data to push in Backend:", newRequestData);
     };
 
-    // ৪. প্রোফাইল সাকসেসফুলি আপডেট হওয়ার পর মেইন পেজের স্টেট আপডেট করার ফাংশন
-    const handleProfileUpdateComplete = (updatedDetails) => {
-        setUserData(prev => ({
-            ...prev,
-            ...updatedDetails
-        }));
-    };
 
-    // ৫. লগআউট হ্যান্ডলার ফাংশন
-    const handleLogout = () => {
-        // এখানে আপনার সেশন বা কুকি ডিলিট করার কোড বসবে
-        // উদাহরণ: await authClient.signOut();
-        router.push('/login');
-    };
 
     return (
         <div className="w-full min-h-screen bg-slate-50/50 py-8 px-4 sm:px-6 font-inter">

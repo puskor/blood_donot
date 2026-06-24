@@ -1,13 +1,17 @@
 import DonorDashboard from '@/components/dashboard/donor/Dashboard';
-import DonorCard from '@/components/dashboard/donor/DonorCard';
-import SearchDonors from '@/components/dashboard/donor/SearchDonors';
-import React from 'react';
+import { GetRequestById } from '@/lib/action/get/request';
+import { getUserSession } from '@/lib/core/getSession';
 
-const Donor = () => {
+const Donor = async () => {
+    const user = await getUserSession()
+    const userId = user?.id
+    const requestData = await GetRequestById(userId)
+
+    // console.log(requestData)
+
     return (
         <div>
-            <DonorDashboard/>
-
+            <DonorDashboard requestData={requestData}/>
         </div>
     );
 };
