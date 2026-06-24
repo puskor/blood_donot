@@ -11,3 +11,9 @@ export const GetRequest = async (id) => {
     const result = await getData(api)
     return result;
 }
+
+export const GetRequestOne = async (id) => {
+    const api = `api/request/${id}`
+    const result = await getData(api)
+    return result;
+}

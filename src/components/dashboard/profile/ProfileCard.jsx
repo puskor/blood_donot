@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FiMail, FiPhone, FiMapPin, FiCalendar, FiEdit3, FiLogOut } from 'react-icons/fi';
 
 export default function ProfileCard({ user , onEditClick, onLogout }) {
-    console.log("user",user)
+    // console.log("user",user)
     const bloodGroup = user.userDetails.bloodGroup 
     const name = user.userDetails.name
     const email = user.userDetails.email

@@ -10,10 +10,8 @@ import { useRouter } from 'next/navigation';
 export default function DonorDashboard(requestData) {
     const requests = requestData.requestData
     // console.log(requests)
-    const router = useRouter();
     const [activeTab, setActiveTab] = useState('requests');
     const [isModalOpen, setIsModalOpen] = useState(false); // এড রিকোয়েস্ট মডাল স্টেট
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ২. এডিট প্রোফাইল মডাল স্টেট
 
     // ৩. ইউজারের ডেটাকে রিঅ্যাক্ট স্টেটে নেওয়া হলো যেন এডিট করলে সাথে সাথে UI-তে আপডেট দেখায়
     // const [userData, setUserData] = useState({
