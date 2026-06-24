@@ -3,8 +3,14 @@
 import { useState } from 'react';
 import { IoCloseOutline } from 'react-icons/io5';
 import { bdGeographicData } from '@/lib/data/bd-data'; // ডেটা ফাইলটি ইম্পোর্ট করুন
+import { useSession } from '@/lib/auth-client';
+import { RequestPost } from '@/lib/action/post/requestPost';
 
 export default function AddRequestModal({ isOpen, onClose, onSubmit }) {
+    const { data: session } = useSession()
+    const userId = session?.user?.id
+    // console.log(userId)
+
     const [formData, setFormData] = useState({
         patientName: '',
         bloodGroup: '',
@@ -18,6 +24,7 @@ export default function AddRequestModal({ isOpen, onClose, onSubmit }) {
         phone: '',
         description: '',
         status: 'Pending'
+
     });
 
     if (!isOpen) return null;
@@ -49,10 +56,18 @@ export default function AddRequestModal({ isOpen, onClose, onSubmit }) {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         onSubmit(formData);
-        // ফর্ম ক্লিয়ার স্টেট
+
+        const requestData = {
+            ...formData,
+            userId: userId
+        }
+        const result = await RequestPost(requestData)
+        console.log("result", result);
+        console.log("data", requestData)
+
         setFormData({
             patientName: '', bloodGroup: '', age: '', hospitalName: '',
             division: '', district: '', upazila: '', neededDate: '', neededTime: '',
@@ -68,7 +83,7 @@ export default function AddRequestModal({ isOpen, onClose, onSubmit }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
             <div className="bg-white w-full max-w-2xl rounded-2xl border border-slate-100 shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-                
+
                 {/* Modal Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
                     <h2 className="text-base font-bold text-slate-900 font-poppins tracking-tight">Create Blood Request</h2>
@@ -80,7 +95,7 @@ export default function AddRequestModal({ isOpen, onClose, onSubmit }) {
                 {/* Form Fields */}
                 <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        
+
                         {/* Patient Name */}
                         <div className="space-y-1">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Patient Name</label>

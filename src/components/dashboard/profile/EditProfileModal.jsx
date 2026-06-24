@@ -8,7 +8,7 @@ import { uploadImage } from '@/lib/uploadImage'; // আপনার ইমেজ
 import { UserDetailsPost } from '@/lib/action/post/userDetails'; // আপনার ডাটাবেজ আপডেট অ্যাকশন
 
 export default function EditProfileModal({ isOpen, onClose, userData, onUpdateComplete }) {
-    console.log("user",userData);
+    // console.log("user",userData);
     const user = userData.userDetails
     const [formData, setFormData] = useState({
         name: '',

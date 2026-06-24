@@ -3,21 +3,19 @@
 import Image from 'next/image';
 import { FiMail, FiPhone, FiMapPin, FiCalendar, FiEdit3, FiLogOut } from 'react-icons/fi';
 
-export default function ProfileCard({ user = {}, onEditClick, onLogout }) {
+export default function ProfileCard({ user , onEditClick, onLogout }) {
+    console.log("user",user)
+    const bloodGroup = user.userDetails.bloodGroup 
+    const name = user.userDetails.name
+    const email = user.userDetails.email
+    const phone = user.userDetails.phone 
+    const image = user.userDetails.image 
+    const createdAt = user.userDetails.createdAt 
+    const role = user.userDetails.role 
 
-    // রিয়েল ডেটা ফলব্যাক (যদি প্রপ্স থেকে ডেটা না আসে বা আনডিফাইন্ড থাকে)
-    const bloodGroup = user.bloodGroup || "AB+";
-    const name = user.name || "donor8";
-    const email = user.email || "d8@gmail.com";
-    const phone = user.phone || "01315100000";
-    const image = user.image || "https://i.ibb.co/vvmDL7nL/IMG-20241102-020717.jpg";
-    const createdAt = user.createdAt || "2026-06-24T07:09:55.404Z";
-    const role = user.role || "donor";
-
-    // ঠিকানা তৈরি করার লজিক
-    const upazila = user.upazila || "Trishal";
-    const district = user.district || "Mymensingh";
-    const division = user.division || "Mymensingh";
+    const upazila = user.userDetails.upazila 
+    const district = user.userDetails.district 
+    const division = user.userDetails.division 
 
     // ISO Date বা নরমাল ডেট ফরম্যাট সুন্দর করার লজিক
     const formatDate = (dateString) => {
