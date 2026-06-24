@@ -7,6 +7,7 @@ import { signUp } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { uploadImage } from '@/lib/uploadImage';
 import { UserDetailsPost } from '@/lib/action/post/userDetails';
+import { bdGeographicData } from '@/lib/data/bd-data'; // বাংলাদেশ ডেটা ইম্পোর্ট করা হলো
 
 export default function SignUp() {
     const [formData, setFormData] = useState({
@@ -44,6 +45,27 @@ export default function SignUp() {
         }));
     };
 
+    // Division পরিবর্তন হলে District এবং Upazila রিসেট হবে
+    const handleDivisionChange = (e) => {
+        const value = e.target.value;
+        setFormData((prev) => ({
+            ...prev,
+            division: value,
+            district: '',
+            upazila: ''
+        }));
+    };
+
+    // District পরিবর্তন হলে কেবল Upazila রিসেট হবে
+    const handleDistrictChange = (e) => {
+        const value = e.target.value;
+        setFormData((prev) => ({
+            ...prev,
+            district: value,
+            upazila: ''
+        }));
+    };
+
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             setAvatar(e.target.files[0]);
@@ -73,7 +95,6 @@ export default function SignUp() {
                 password: formData.password,
                 name: formData.name,
                 image: avatarUrl,
-
             });
 
             if (error) {
@@ -82,7 +103,7 @@ export default function SignUp() {
             }
 
             const details = {
-                userId: data?.user?.id || data?.id, // অথ লাইব্রেরি থেকে জেনারেট হওয়া ইউনিক আইডি
+                userId: data?.user?.id || data?.id,
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
@@ -108,6 +129,10 @@ export default function SignUp() {
             alert("Registration failed");
         }
     };
+
+    // স্টেট এর ওপর ভিত্তি করে ড্রপডাউন অপশন ফিল্টারিং
+    const availableDistricts = formData.division ? Object.keys(bdGeographicData[formData.division]?.districts || {}) : [];
+    const availableUpazilas = (formData.division && formData.district) ? bdGeographicData[formData.division]?.districts[formData.district] || [] : [];
 
     return (
         <div className="w-full min-h-screen bg-slate-50/30 flex items-center justify-center p-6 sm:p-10 font-inter">
@@ -158,17 +183,12 @@ export default function SignUp() {
                                 value={formData.bloodGroup}
                                 onChange={handleInputChange}
                                 required
-                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-880 bg-white font-medium transition-all appearance-none cursor-pointer"
+                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer"
                             >
                                 <option value="" disabled>Select Blood Group</option>
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="B-">B-</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                                <option value="AB+">AB+</option>
-                                <option value="AB-">AB-</option>
+                                {['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].map(bg => (
+                                    <option key={bg} value={bg}>{bg}</option>
+                                ))}
                             </select>
                         </div>
 
@@ -186,7 +206,7 @@ export default function SignUp() {
                             />
                         </div>
 
-                        {/* Phone Number Input (Only Numbers Allowed) */}
+                        {/* Phone Number Input */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Phone Number</label>
                             <input
@@ -202,55 +222,56 @@ export default function SignUp() {
                             />
                         </div>
 
-                        {/* Division Select Box */}
+                        {/* 1. Division Select Box */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Division</label>
                             <select
                                 name="division"
                                 value={formData.division}
-                                onChange={handleInputChange}
+                                onChange={handleDivisionChange}
                                 required
                                 className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer"
                             >
                                 <option value="" disabled>Select Division</option>
-                                <option value="Dhaka">Dhaka</option>
-                                <option value="Chattogram">Chattogram</option>
-                                <option value="Rajshahi">Rajshahi</option>
-                                <option value="Sylhet">Sylhet</option>
+                                {Object.keys(bdGeographicData).map(div => (
+                                    <option key={div} value={div}>{div}</option>
+                                ))}
                             </select>
                         </div>
 
-                        {/* District Select Box */}
+                        {/* 2. District Select Box */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">District</label>
                             <select
                                 name="district"
                                 value={formData.district}
-                                onChange={handleInputChange}
+                                onChange={handleDistrictChange}
+                                disabled={!formData.division}
                                 required
-                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer"
+                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer disabled:bg-slate-50 disabled:cursor-not-allowed"
                             >
                                 <option value="" disabled>Select District</option>
-                                <option value="Dhaka">Dhaka</option>
-                                <option value="Chattogram">Chattogram</option>
-                                <option value="Sylhet">Sylhet</option>
+                                {availableDistricts.map(dis => (
+                                    <option key={dis} value={dis}>{dis}</option>
+                                ))}
                             </select>
                         </div>
 
-                        {/* Upazila Select Box */}
+                        {/* 3. Upazila Select Box */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Upazila</label>
                             <select
                                 name="upazila"
                                 value={formData.upazila}
                                 onChange={handleInputChange}
+                                disabled={!formData.district}
                                 required
-                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer"
+                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 text-slate-800 bg-white font-medium transition-all appearance-none cursor-pointer disabled:bg-slate-50 disabled:cursor-not-allowed"
                             >
                                 <option value="" disabled>Select Upazila</option>
-                                <option value="Dhanmondi">Dhanmondi</option>
-                                <option value="Agrabad">Agrabad</option>
-                                <option value="Zindabazar">Zindabazar</option>
+                                {availableUpazilas.map(upz => (
+                                    <option key={upz} value={upz}>{upz}</option>
+                                ))}
                             </select>
                         </div>
 
