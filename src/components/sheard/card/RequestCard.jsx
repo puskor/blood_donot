@@ -1,7 +1,13 @@
+"use client"
 import Link from 'next/link';
 import { MapPin, Calendar, Clock } from 'lucide-react';
+import { useSession } from '@/lib/auth-client';
 
-const RequestCard = ({ req }) => {
+const RequestCard =  ({ req }) => {
+
+    const {data:session} = useSession()
+    const user = session?.user 
+
 
     // // ডাটাবেজের আইডি রেন্ডার করার জন্য fallback লজিক
     // const requestId = req._id || req.id;
@@ -76,7 +82,7 @@ const RequestCard = ({ req }) => {
             <div className="mt-6">
                 {/* ৫. ডাইনামিক রাউটিং এর জন্য req.id এর বদলে req._id ব্যবহার করা হলো */}
                 <Link
-                    href={`/dashboard/donor/request/${req?._id}`}
+                    href={user ? `/dashboard/donor/request/${req?._id}` : `/login?redirect=/dashboard/donor/request/${req?._id}`}
                     className="block w-full text-center py-2.5 bg-white border border-slate-200 text-slate-700 font-semibold text-xs rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all font-inter"
                 >
                     View Details

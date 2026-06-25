@@ -6,7 +6,7 @@ import RequestCard from '@/components/sheard/card/RequestCard';
 import { GetRequest } from '@/lib/action/get/request';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-const DonorRequest = () => {
+const RequestPage = () => {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -129,4 +129,4 @@ const DonorRequest = () => {
     );
 };
 
-export default DonorRequest;
+export default RequestPage;

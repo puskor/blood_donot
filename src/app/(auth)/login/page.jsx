@@ -6,12 +6,17 @@ import Image from 'next/image';
 import { FaDroplet } from 'react-icons/fa6';
 import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi';
 import { signIn } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'; // 🌟 useSearchParams ইম্পোর্ট করা হয়েছে
 
 
 export default function Login() {
 
-    const router = useRouter()
+    const router = useRouter();
+    const searchParams = useSearchParams(); // 🌟 সার্চ প্যারামস অবজেক্ট তৈরি
+
+    // URL থেকে 'redirect' প্যারামিটার রিড করা হচ্ছে (যেমন: /dashboard/donor/donor_list/...)
+    const redirectTo = searchParams.get('redirect');
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -32,17 +37,21 @@ export default function Login() {
         const { data, error } = await signIn.email({
             email: formData.email,
             password: formData.password
-        })
+        });
 
         if (data) {
-            alert("login successfully")
-            router.push("/dashboard")
+            alert("Login successfully");
+
+            // 🌟 যদি URL-এ কোনো নির্দিষ্ট রিডিরেক্ট পাথ থাকে তবে সেখানে যাবে, নাহলে ডিফল্ট ড্যাশবোর্ডে যাবে
+            if (redirectTo) {
+                router.push(redirectTo);
+            } else {
+                router.push("/dashboard");
+            }
         }
         if (error) {
-            alert("something is wrong")
+            alert("Something is wrong");
         }
-        // console.log(data)
-        // console.log('Submitted Login Data:', formData);
     };
 
     return (
@@ -138,7 +147,7 @@ export default function Login() {
                     <div className="text-center pt-2">
                         <p className="text-sm text-slate-400 font-medium">
                             Don't have an account?{' '}
-                            <Link href="/register" className="text-rose-600 font-bold hover:text-rose-700 transition-colors">
+                            <Link href={`/register?redirect=${redirectTo}`} className="text-rose-600 font-bold hover:text-rose-700 transition-colors">
                                 Register here
                             </Link>
                         </p>

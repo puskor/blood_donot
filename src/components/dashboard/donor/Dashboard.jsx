@@ -40,7 +40,7 @@ export default function DonorDashboard({ requestData, donationsData }) {
         <div className="w-full min-h-screen bg-slate-50/50 py-8 px-4 sm:px-6 font-inter">
             <div className="w-full max-w-6xl mx-auto space-y-8">
 
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex  flex-row items-center justify-between gap-4">
                     <div>
                         <h1 className="text-xl sm:text-2xl font-bold text-slate-900 font-poppins tracking-tight">My Profile</h1>
                         <p className="text-xs text-slate-400 mt-1 font-medium">Dashboard / Profile</p>

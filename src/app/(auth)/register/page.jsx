@@ -4,12 +4,18 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { FaDroplet, FaCloudArrowUp } from 'react-icons/fa6';
 import { signUp } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation'; // 🌟 useSearchParams ইম্পোর্ট করা হলো
 import { uploadImage } from '@/lib/uploadImage';
 import { UserDetailsPost } from '@/lib/action/post/userDetails';
-import { bdGeographicData } from '@/lib/data/bd-data'; // বাংলাদেশ ডেটা ইম্পোর্ট করা হলো
+import { bdGeographicData } from '@/lib/data/bd-data';
 
 export default function SignUp() {
+    const router = useRouter();
+    const searchParams = useSearchParams(); // 🌟 সার্চ প্যারামস অবজেক্ট তৈরি
+    
+    // URL থেকে 'redirect' প্যারামিটার রিড করা হচ্ছে (যেমন: /dashboard/donor/donor_list/...)
+    const redirectTo = searchParams.get('redirect'); 
+
     const [formData, setFormData] = useState({
         name: '',
         bloodGroup: '',
@@ -23,13 +29,11 @@ export default function SignUp() {
         agreeToTerms: false,
     });
 
-    const router = useRouter();
     const [avatar, setAvatar] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        // ফোন নম্বরের জন্য শুধু মাত্র ডিজিট (0-9) ফিল্টার করা
         if (name === 'phone') {
             const onlyNums = value.replace(/[^0-9]/g, '');
             setFormData((prev) => ({
@@ -45,7 +49,6 @@ export default function SignUp() {
         }));
     };
 
-    // Division পরিবর্তন হলে District এবং Upazila রিসেট হবে
     const handleDivisionChange = (e) => {
         const value = e.target.value;
         setFormData((prev) => ({
@@ -56,7 +59,6 @@ export default function SignUp() {
         }));
     };
 
-    // District পরিবর্তন হলে কেবল Upazila রিসেট হবে
     const handleDistrictChange = (e) => {
         const value = e.target.value;
         setFormData((prev) => ({
@@ -113,13 +115,20 @@ export default function SignUp() {
                 upazila: formData.upazila,
                 image: avatarUrl,
                 createdAt: new Date()
-            }
+            };
 
             const serverResult = await UserDetailsPost(details);
 
             if (serverResult.success) {
                 console.log("Database Sync Successful:", serverResult);
-                router.push("/dashboard");
+                alert("Registration successful!");
+                
+                // 🌟 ডাটাবেজ সিঙ্ক সফল হলে রিডিরেক্ট কন্ডিশন চেক করা হচ্ছে
+                if (redirectTo) {
+                    router.push(redirectTo);
+                } else {
+                    router.push("/dashboard");
+                }
             } else {
                 alert(serverResult.message || "Auth cleared but DB sync failed.");
             }
@@ -130,7 +139,6 @@ export default function SignUp() {
         }
     };
 
-    // স্টেট এর ওপর ভিত্তি করে ড্রপডাউন অপশন ফিল্টারিং
     const availableDistricts = formData.division ? Object.keys(bdGeographicData[formData.division]?.districts || {}) : [];
     const availableUpazilas = (formData.division && formData.district) ? bdGeographicData[formData.division]?.districts[formData.district] || [] : [];
 
@@ -175,7 +183,7 @@ export default function SignUp() {
                             />
                         </div>
 
-                        {/* Blood Group Select Box */}
+                        {/* Blood Group */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Blood Group</label>
                             <select
@@ -192,7 +200,7 @@ export default function SignUp() {
                             </select>
                         </div>
 
-                        {/* Email Input */}
+                        {/* Email */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Email</label>
                             <input
@@ -206,7 +214,7 @@ export default function SignUp() {
                             />
                         </div>
 
-                        {/* Phone Number Input */}
+                        {/* Phone Number */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Phone Number</label>
                             <input
@@ -222,7 +230,7 @@ export default function SignUp() {
                             />
                         </div>
 
-                        {/* 1. Division Select Box */}
+                        {/* Division */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Division</label>
                             <select
@@ -239,7 +247,7 @@ export default function SignUp() {
                             </select>
                         </div>
 
-                        {/* 2. District Select Box */}
+                        {/* District */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">District</label>
                             <select
@@ -257,7 +265,7 @@ export default function SignUp() {
                             </select>
                         </div>
 
-                        {/* 3. Upazila Select Box */}
+                        {/* Upazila */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Upazila</label>
                             <select
@@ -275,7 +283,7 @@ export default function SignUp() {
                             </select>
                         </div>
 
-                        {/* Avatar Input File Uploader */}
+                        {/* Avatar */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Avatar</label>
                             <label className="w-full h-11 border border-dashed border-slate-200 hover:border-rose-600 rounded-xl px-4 flex items-center justify-start gap-2.5 cursor-pointer bg-white transition-colors group">
@@ -290,7 +298,7 @@ export default function SignUp() {
                             </label>
                         </div>
 
-                        {/* Password Input */}
+                        {/* Password */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Password</label>
                             <input
@@ -304,7 +312,7 @@ export default function SignUp() {
                             />
                         </div>
 
-                        {/* Confirm Password Input */}
+                        {/* Confirm Password */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Confirm Password</label>
                             <input
@@ -320,7 +328,7 @@ export default function SignUp() {
 
                     </div>
 
-                    {/* Terms Agreement Checkbox */}
+                    {/* Terms */}
                     <div className="flex items-start gap-2 pt-1">
                         <input
                             type="checkbox"
@@ -345,10 +353,14 @@ export default function SignUp() {
                     </button>
                 </form>
 
+                {/* 🌟 ফিক্স: নিচের লগইন লিংকেও যেন রিডিরেক্ট প্যারামিটার পাস হয় */}
                 <div className="text-center pt-2 border-t border-slate-100">
                     <p className="text-sm text-slate-400 font-medium">
                         Already have an account?{' '}
-                        <Link href="/login" className="text-rose-600 font-bold hover:text-rose-700 transition-colors">
+                        <Link 
+                            href={redirectTo ? `/login?redirect=${redirectTo}` : "/login"} 
+                            className="text-rose-600 font-bold hover:text-rose-700 transition-colors"
+                        >
                             Login here
                         </Link>
                     </p>

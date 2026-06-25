@@ -1,9 +1,12 @@
+"use client"
+import { useSession } from '@/lib/auth-client';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function DonorCard({ donor }) {
+export default  function DonorCard({ donor }) {
     // Configured default fallback values if props ecosystem object block metrics values missing
-  
+    const {data:session} = useSession()
+    const user = session?.user
     return (
         <div className="bg-white rounded-2xl border max-w-[600px] border-slate-100 p-6 flex flex-col items-center relative shadow-sm hover:shadow-md transition-shadow font-inter">
 
@@ -39,7 +42,7 @@ export default function DonorCard({ donor }) {
             {/* Router Link Handler Controller Target Trigger CTA Link */}
             <div className="w-full mt-6">
                 <Link
-                    href={`/dashboard/donor/donor_list/${donor.userId}`}
+                    href={user ? `/dashboard/donor/donor_list/${donor.userId}` : `/login?redirect=/dashboard/donor/donor_list/${donor.userId}`}
                     className="block w-full text-center py-2.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all font-inter shadow-sm"
                 >
                     View Profile
