@@ -5,27 +5,21 @@ import MyRequestsTable from '@/components/dashboard/profile/MyRequestsTable';
 import AddRequestModal from '@/components/dashboard/profile/AddRequestModal';
 import { useState } from 'react';
 import { FaDroplet, FaHandHoldingHand, FaPlus } from 'react-icons/fa6';
-import { useRouter } from 'next/navigation';
 
-export default function DonorDashboard(requestData) {
-    const requests = requestData.requestData
-    // console.log(requests)
+// 🌟 ফিক্স ১: প্যারামিটারে কার্লি ব্র্যাকেট { } দিয়ে প্রপস ডিস্ট্রাকচার করা হয়েছে
+export default function DonorDashboard({ requestData, donationsData }) {
+
+    // 🌟 ফিক্স ২: এখন donationsData সরাসরি এখান থেকেই পাওয়া যাবে
+    // console.log("Processed donationsData inside Component:", donationsData);
+
+    // requestData অবজেক্টের ভেতর থেকে আসল অ্যারেটি বের করে আনা হচ্ছে
+    const requests = requestData?.data || requestData || [];
+
     const [activeTab, setActiveTab] = useState('requests');
-    const [isModalOpen, setIsModalOpen] = useState(false); // এড রিকোয়েস্ট মডাল স্টেট
-
-    // ৩. ইউজারের ডেটাকে রিঅ্যাক্ট স্টেটে নেওয়া হলো যেন এডিট করলে সাথে সাথে UI-তে আপডেট দেখায়
-    // const [userData, setUserData] = useState({
-    //     ...userDetails
-
-    // });
+    const [isModalOpen, setIsModalOpen] = useState(false); // অ্যাড রিকোয়েস্ট মডাল স্টেট
 
     // লোকাল রিঅ্যাক্ট স্টেট রিকোয়েস্টের জন্য
     const [myRequests, setMyRequests] = useState(requests);
-
-    const myDonations = [
-        { id: 1, recipientName: "Abir Hossain", date: "12 Feb, 2026", location: "Enam Medical", status: "Successful" },
-        { id: 2, recipientName: "Mitu Akter", date: "05 Nov, 2025", location: "Labaid Hospital", status: "Successful" },
-    ];
 
     // নতুন রিকোয়েস্ট সাবমিট হ্যান্ডলার
     const handleAddRequestSubmit = (newRequestData) => {
@@ -35,14 +29,12 @@ export default function DonorDashboard(requestData) {
             bloodGroup: newRequestData.bloodGroup,
             hospital: newRequestData.hospitalName,
             date: newRequestData.neededDate,
-            status: newRequestData.status
+            status: newRequestData.status || "Pending"
         };
 
         setMyRequests(prev => [formattedRequest, ...prev]);
         console.log("Newly Saved Data to push in Backend:", newRequestData);
     };
-
-
 
     return (
         <div className="w-full min-h-screen bg-slate-50/50 py-8 px-4 sm:px-6 font-inter">
@@ -64,43 +56,42 @@ export default function DonorDashboard(requestData) {
                 </div>
 
                 <div className='mt-10'>
-                  
-
-                        {/* Tab Switch Buttons */}
-                        <div className="flex border border-slate-100 bg-white p-1.5 rounded-xl shadow-sm gap-2">
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('requests')}
-                                className={`flex-1 h-11 rounded-lg flex items-center justify-center gap-2 text-xs sm:text-sm font-bold transition-all font-poppins ${activeTab === 'requests'
+                    {/* Tab Switch Buttons */}
+                    <div className="flex border border-slate-100 bg-white p-1.5 rounded-xl shadow-sm gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('requests')}
+                            className={`flex-1 h-11 rounded-lg flex items-center justify-center gap-2 text-xs sm:text-sm font-bold transition-all font-poppins ${activeTab === 'requests'
                                     ? 'bg-rose-600 text-white shadow-sm'
                                     : 'bg-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
-                                    }`}
-                            >
-                                <FaDroplet className="h-4 w-4" />
-                                My Requests
-                            </button>
+                                }`}
+                        >
+                            <FaDroplet className="h-4 w-4" />
+                            My Requests
+                        </button>
 
-                            <button
-                                type="button"
-                                onClick={() => setActiveTab('donations')}
-                                className={`flex-1 h-11 rounded-lg flex items-center justify-center gap-2 text-xs sm:text-sm font-bold transition-all font-poppins ${activeTab === 'donations'
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('donations')}
+                            className={`flex-1 h-11 rounded-lg flex items-center justify-center gap-2 text-xs sm:text-sm font-bold transition-all font-poppins ${activeTab === 'donations'
                                     ? 'bg-rose-600 text-white shadow-sm'
                                     : 'bg-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50/60'
-                                    }`}
-                            >
-                                <FaHandHoldingHand className="h-4 w-4" />
-                                My Donations
-                            </button>
-                        </div>
+                                }`}
+                        >
+                            <FaHandHoldingHand className="h-4 w-4" />
+                            My Donations
+                        </button>
+                    </div>
 
-                        {/* Condition-based Table Switch Container */}
-                        <div className="bg-white border border-slate-100 mt-5 rounded-2xl p-6 shadow-sm min-h-[300px]">
-                            {activeTab === 'requests' ? (
-                                <MyRequestsTable requests={myRequests} />
-                            ) : (
-                                <MyDonationsTable donations={myDonations} />
-                            )}
-                        </div>
+                    {/* Condition-based Table Switch Container */}
+                    <div className="bg-white border border-slate-100 mt-5 rounded-2xl p-6 shadow-sm min-h-[300px]">
+                        {activeTab === 'requests' ? (
+                            <MyRequestsTable requests={myRequests} />
+                        ) : (
+                            /* 🌟 ফিক্স ৩: সঠিক donationsData প্রপ্সটি টেবিলে পাস করা হলো */
+                            <MyDonationsTable donations={donationsData} />
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -110,7 +101,6 @@ export default function DonorDashboard(requestData) {
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleAddRequestSubmit}
             />
-
         </div>
     );
 }

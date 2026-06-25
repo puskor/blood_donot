@@ -6,7 +6,7 @@ export const GetRequestById = async (id) => {
     return result;
 }
 
-export const GetRequest = async (id) => {
+export const GetRequest = async () => {
     const api = `api/request`
     const result = await getData(api)
     return result;
