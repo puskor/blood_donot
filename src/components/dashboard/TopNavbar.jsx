@@ -26,13 +26,11 @@ const TopNavbar = ({ onMenuClick }) => { // 🌟 প্যারেন্টে 
                 </Link>
 
                 {/* ডেসকটপ নেভিগেশন (hidden on mobile) */}
-                <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 font-poppins">
-                    <Link href="/">Home</Link>
-                    <Link href="/donors">Donors</Link>
-                    <Link href="/requests">Requests</Link>
-                    <Link href="/funding">Funding</Link>
-                    <Link href="/about">About Us</Link>
-                </div>
+                 <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 font-poppins">
+                     <Link href="/">Home</Link>
+                     <Link href="/funding">Funding</Link>
+                     <Link href="/about">About Us</Link>
+                 </div>
 
                 {/* ডানপাশের অ্যাকশন এরিয়া */}
                 <div className="flex items-center gap-2 sm:gap-4">

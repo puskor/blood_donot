@@ -5,17 +5,17 @@ import { FiMail, FiPhone, FiMapPin, FiCalendar, FiEdit3, FiLogOut } from 'react-
 
 export default function ProfileCard({ user , onEditClick, onLogout }) {
     // console.log("user",user)
-    const bloodGroup = user.userDetails.bloodGroup 
-    const name = user.userDetails.name
-    const email = user.userDetails.email
-    const phone = user.userDetails.phone 
-    const image = user.userDetails.image 
-    const createdAt = user.userDetails.createdAt 
-    const role = user.userDetails.role 
+    const bloodGroup = user?.userDetails?.bloodGroup ||"N/A"
+    const name = user?.userDetails?.name||"N/A"
+    const email = user?.userDetails?.email||"N/A"
+    const phone = user?.userDetails?.phone ||"N/A"
+    const image = user?.userDetails?.image ||"N/A"
+    const createdAt = user?.userDetails?.createdAt ||"N/A"
+    const role = user?.userDetails?.role ||"N/A"
 
-    const upazila = user.userDetails.upazila 
-    const district = user.userDetails.district 
-    const division = user.userDetails.division 
+    const upazila = user?.userDetails?.upazila ||"N/A"
+    const district = user?.userDetails?.district ||"N/A"
+    const division = user?.userDetails?.division ||"N/A"
 
     // ISO Date বা নরমাল ডেট ফরম্যাট সুন্দর করার লজিক
     const formatDate = (dateString) => {
