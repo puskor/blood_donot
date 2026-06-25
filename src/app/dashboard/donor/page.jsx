@@ -35,7 +35,7 @@ const Donor = async () => {
                 const reqObj = resData?.data ? resData.data : resData;
 
                 if (reqObj && reqObj.patientName) {
-                    console.log("req",reqObj)
+                    // console.log("req",reqObj)
                     return {
                         ...donation,
                         

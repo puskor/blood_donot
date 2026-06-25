@@ -1,8 +1,12 @@
 import DonorCard from '@/components/dashboard/donor/DonorCard';
 import SearchDonors from '@/components/dashboard/donor/SearchDonors';
-import React from 'react';
+import { getAllDonor } from '@/lib/action/get/donate';
 
-const DonorList = () => {
+const DonorList = async() => {
+    const donors = await getAllDonor()
+
+    // console.log(donors) 
+
     return (
         <div>
             <div >
@@ -12,12 +16,7 @@ const DonorList = () => {
             </div>
 
             <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10 gap-4 mx-2' >
-                <DonorCard />
-                <DonorCard />
-                <DonorCard />
-                <DonorCard />
-                <DonorCard />
-                <DonorCard />
+               {donors.map((donor)=> <DonorCard key={donor._id} donor={donor}/>)}
 
             </div>
 
