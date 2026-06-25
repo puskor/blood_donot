@@ -4,6 +4,7 @@ import ProfileCard from '@/components/dashboard/profile/ProfileCard';
 import EditProfileModal from '@/components/dashboard/profile/EditProfileModal'; // ১. এডিট মডালটি ইম্পোর্ট করা হলো
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 export default function ProfilePage(userDetails) {
     const router = useRouter();
@@ -40,10 +41,15 @@ export default function ProfilePage(userDetails) {
     };
 
     // ৫. লগআউট হ্যান্ডলার ফাংশন
-    const handleLogout = () => {
-        // এখানে আপনার সেশন বা কুকি ডিলিট করার কোড বসবে
-        // উদাহরণ: await authClient.signOut();
-        router.push('/login');
+    const handleLogout = async () => {
+        try {
+            await authClient.signOut(); // সেশন ও কুকি ক্লিয়ার করবে
+            router.push('/'); // লগআউট হওয়ার পর মেইন হোমপেজে পাঠিয়ে দেবে
+            router.refresh(); // স্টেট ও রাউটার রিফ্রেশ করার জন্য
+        } catch (error) {
+            console.error("Logout Failed:", error);
+            alert("Something went wrong during logout!");
+        }
     };
 
     return (
