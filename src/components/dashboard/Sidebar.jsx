@@ -36,9 +36,9 @@ export default function Sidebar({ isOpen, onClose }) { // 🌟 মোবাই�
     ];
 
     const VolunteerItems = [
-        { name: 'Dashboard', path: '/dashboard', icon: RxDashboard },
+        { name: 'Dashboard', path: '/dashboard/volunteer', icon: RxDashboard },
         { name: 'Profile', path: '/dashboard/profile', icon: FiUser },
-        { name: 'Donation Requests', path: '/dashboard/requests', icon: FiFileText },
+        { name: 'Donation Requests', path: '/dashboard/volunteer/request', icon: FiFileText },
         { name: 'Funding Management', path: '/dashboard/funding', icon: AiOutlineDollar },
     ];
 

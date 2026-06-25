@@ -55,10 +55,10 @@ const AllDonorList = () => {
     };
 
     return (
-        <div className='pb-20 font-inter px-10'>
+        <div className='pb-20 font-inter px-10 mt-15'>
             <div>
-                <h1 className='text-2xl md:text-4xl lg:text-5xl pb-10 font-bold text-center font-poppins'>
-                    All Donors
+                <h1 className='text-2xl pt-10 md:text-4xl lg:text-5xl pb-10 font-bold text-center font-poppins'>
+                    Donors
                 </h1>
                 <SearchDonors onSearch={handleSearchSubmit} />
             </div>

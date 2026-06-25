@@ -28,8 +28,8 @@ const TopNavbar = ({ onMenuClick }) => { // 🌟 প্যারেন্টে 
                 {/* ডেসকটপ নেভিগেশন (hidden on mobile) */}
                  <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 font-poppins">
                      <Link href="/">Home</Link>
-                     <Link href="/funding">Funding</Link>
-                     <Link href="/about">About Us</Link>
+                     <Link href="/dashboard/funding">Funding</Link>
+                     <Link href="#">About Us</Link>
                  </div>
 
                 {/* ডানপাশের অ্যাকশন এরিয়া */}

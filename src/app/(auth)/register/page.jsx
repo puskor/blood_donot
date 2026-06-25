@@ -124,7 +124,7 @@ export default function SignUp() {
                 alert("Registration successful!");
                 
                 // 🌟 ডাটাবেজ সিঙ্ক সফল হলে রিডিরেক্ট কন্ডিশন চেক করা হচ্ছে
-                if (redirectTo) {
+                if (redirectTo !="null") {
                     router.push(redirectTo);
                 } else {
                     router.push("/dashboard");
@@ -340,7 +340,7 @@ export default function SignUp() {
                             className="w-4 h-4 rounded border-slate-300 text-rose-600 focus:ring-rose-600/20 mt-0.5 cursor-pointer accent-rose-600"
                         />
                         <label htmlFor="terms" className="text-xs font-medium text-slate-500 select-none cursor-pointer leading-relaxed">
-                            I agree to the <Link href="/terms" className="text-rose-600 font-bold hover:underline">Terms & Conditions</Link>
+                            I agree to the <Link href="#" className="text-rose-600 font-bold hover:underline">Terms & Conditions</Link>
                         </label>
                     </div>
 

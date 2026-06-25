@@ -52,7 +52,7 @@ const RequestPage = () => {
     };
 
     return (
-        <section className="w-full bg-pink-100/40 pb-20 px-4 sm:px-6 font-inter">
+        <section className="w-full bg-pink-100/40 pb-20 px-4 sm:px-6 font-inter mt-15">
             <h1 className='py-10 text-center font-bold text-3xl md:text-4xl text-slate-800 font-poppins'>
                 BLOOD REQUESTS
             </h1>
