@@ -1,9 +1,10 @@
+import VolunteerMainDashboard from "@/components/dashboard/volunteer/VolunteerMainDashboard";
 
 
 const Volunteer = () => {
     return (
         <div>
-            this is volunteer page
+            <VolunteerMainDashboard/>
         </div>
     );
 };
