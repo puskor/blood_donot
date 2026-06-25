@@ -10,23 +10,7 @@ export default async function RequestDetailsPage({ params }) {
     const requestData = await GetRequestOne(id);
     const requesterDetails = await GetUserDetailsById(requestData?.userId);
 
-    // ডেট ফরম্যাটিং ফাংশন (যেমন: 20 June, 2026)
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        try {
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-            return date.toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-            });
-        } catch (e) {
-            return dateString;
-        }
-    };
-
-    const userAvatar = requesterDetails?.image || "/donor-placeholder.jpg";
+   
 
     return (
         <div>
