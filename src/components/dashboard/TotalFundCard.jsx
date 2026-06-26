@@ -1,8 +1,8 @@
 "use client";
 
-export default function TotalFundCard({ totalAmount = "12,450.00", onGiveFund }) {
+export default function TotalFundCard({ totalAmount , onGiveFund }) {
     return (
-        <div className="w-full bg-gradient-to-r from-rose-600 to-rose-500 rounded-2xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 font-inter">
+        <div className="w-full bg-gradient-to-r from-rose-600 to-rose-500 rounded-2xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden items-center gap-4 font-inter">
 
             {/* Decorative Vector Heart Background Shape */}
             <div className="absolute right-1/4 bottom-0 opacity-10 pointer-events-none hidden md:block">
@@ -20,13 +20,13 @@ export default function TotalFundCard({ totalAmount = "12,450.00", onGiveFund })
                 </h2>
             </div>
 
-            <button
+            {/* <button
                 type="button"
                 onClick={onGiveFund}
                 className="bg-white hover:bg-rose-50 text-rose-600 font-extrabold text-xs sm:text-sm px-6 h-11 rounded-xl shadow-md active:scale-[0.98] transition-all font-poppins tracking-wide shrink-0"
             >
                 Give Fund
-            </button>
+            </button> */}
 
         </div>
     );

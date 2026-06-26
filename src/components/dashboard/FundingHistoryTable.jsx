@@ -1,14 +1,8 @@
 "use client";
 
 export default function FundingHistoryTable({ historyData }) {
-    // Fallback static array matching your UI design screenshot exactly
-    const records = historyData || [
-        { id: 1, date: "20 May, 2024", name: "Tanvir Ahmed", amount: "$50.00", method: "Stripe", status: "Completed" },
-        { id: 2, date: "18 May, 2024", name: "Sadia Islam", amount: "$30.00", method: "Stripe", status: "Completed" },
-        { id: 3, date: "16 May, 2024", name: "Arman Hossain", amount: "$100.00", method: "Stripe", status: "Completed" },
-        { id: 4, date: "15 May, 2024", name: "Nusrat Jahan", amount: "$20.00", method: "Stripe", status: "Completed" },
-        { id: 5, date: "14 May, 2024", name: "Rafikul Islam", amount: "$50.00", method: "Stripe", status: "Completed" },
-    ];
+    // সরাসরি মেইন পেজ থেকে আসা রিয়েল-টাইম স্টেট রিড করবে
+    const records = historyData || [];
 
     return (
         <div className="space-y-4 font-inter">
