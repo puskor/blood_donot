@@ -1,8 +1,9 @@
 import { getData } from "@/lib/core/get";
+import { protectedFetch } from "@/lib/core/secure";
 
 export const GetDonorDataById = async (id) => {
     const api = `api/donate/${id}`
-    const result = await getData(api)
+    const result = await protectedFetch(api)
     return result;
 }
 

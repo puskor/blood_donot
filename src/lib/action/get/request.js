@@ -1,8 +1,9 @@
 import { getData } from "@/lib/core/get";
+import { protectedFetch } from "@/lib/core/secure";
 
 export const GetRequestById = async (id) => {
     const api = `api/request-by-id?userId=${id}`
-    const result = await getData(api)
+    const result = await protectedFetch(api)
     return result;
 }
 
@@ -35,6 +36,6 @@ export const GetRequest = async (filters = {}, page = 1, limit = 9) => {
 
 export const GetRequestOne = async (id) => {
     const api = `api/request/${id}`
-    const result = await getData(api)
+    const result = await protectedFetch(api)
     return result;
 }
