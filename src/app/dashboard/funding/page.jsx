@@ -8,6 +8,7 @@ import CheckoutForm from "./CheckoutForm";
 
 import FundingHistoryTable from "@/components/dashboard/FundingHistoryTable";
 import TotalFundCard from "@/components/dashboard/TotalFundCard";
+import { GetPayment } from "@/lib/action/get/getPayment";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -26,11 +27,8 @@ export default function FundingPage() {
 
   const fetchPayments = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:5001/api/payment"
-      );
 
-      const data = await res.json();
+      const data = await GetPayment()
 
       const formattedHistory = data.map((payment) => ({
         id: payment._id,

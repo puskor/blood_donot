@@ -7,6 +7,7 @@ import {
     useElements,
 } from "@stripe/react-stripe-js";
 import { useSession } from "@/lib/auth-client";
+import { paymentPost } from "@/lib/action/post/paymentPost";
 
 export default function CheckoutForm({
     amount,
@@ -84,13 +85,7 @@ export default function CheckoutForm({
                     createdAt: new Date(),
                 };
 
-                await fetch("http://localhost:5001/api/payment", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(paymentData),
-                });
+                await paymentPost(paymentData) ;
 
                 const newTransaction = {
                     id: result.paymentIntent.id,
