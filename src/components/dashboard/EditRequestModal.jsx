@@ -5,11 +5,11 @@ import { FiX } from 'react-icons/fi';
 
 export default function EditRequestModal({ isOpen, onClose, requestData, onUpdate }) {
   const [formData, setFormData] = useState({
-    patientName: requestData.patientName || '',
-    bloodGroup: requestData.bloodGroup || '',
-    hospitalName: requestData.hospitalName || '',
-    neededDate: requestData.neededDate || '',
-    status: requestData.status || 'Pending'
+    patientName: requestData?.patientName || '',
+    bloodGroup: requestData?.bloodGroup || '',
+    hospitalName: requestData?.hospitalName || '',
+    neededDate: requestData?.neededDate || '',
+    status: requestData?.status || 'Pending'
   });
   const [loading, setLoading] = useState(false);
 

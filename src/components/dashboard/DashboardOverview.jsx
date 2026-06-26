@@ -34,7 +34,7 @@ export default function DashboardOverview({ totalDonors = 0, requests = [] }) {
     ];
 
     return (
-        <div className="space-y-8 w-full">
+        <div className="space-y-8 w-full p-5 md:p-10">
 
             {/* 📊 Top Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">

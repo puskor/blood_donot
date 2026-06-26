@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { admin } from "better-auth/plugins";
 
 const client = new MongoClient(process.env.PRIVATE_DB_URI);
 const db = client.db("blood_donor");
@@ -19,6 +20,9 @@ export const auth = betterAuth({
                 defaultValue: "donor"
             }
         }
-    }
+    },
+    plugins: [
+        admin() // 🌟 প্লাগইন লিস্টে admin() যুক্ত করুন
+    ]
 
 });

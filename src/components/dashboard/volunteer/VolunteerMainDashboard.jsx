@@ -19,7 +19,7 @@ export default function VolunteerMainDashboard() {
                 
                 // সমান্তরালভাবে (Parallel) ডোনার এবং রিকোয়েস্ট ফেচ করা
                 const [donorRes, requestRes] = await Promise.all([
-                    getAllDonor({}, 1, 1), // শুধু টোটাল কাউন্ট জানার জন্য লিমিট ১ রাখা হয়েছে
+                    getAllDonor(), // শুধু টোটাল কাউন্ট জানার জন্য লিমিট ১ রাখা হয়েছে
                     GetRequest({}, 1, 100) // ড্যাশবোর্ড অ্যানালিটিক্স এর জন্য সর্বোচ্চ রিকোয়েস্ট লোড করা
                 ]);
 
