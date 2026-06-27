@@ -1,8 +1,8 @@
-import { getData } from "@/lib/core/get"
+import { protectedFetch } from "@/lib/core/secure";
 
 export const GetUserDetailsById = async (id) => {
     const api = `api/user/save-details/${id}`
-    const result = await getData(api)
+    const result = await protectedFetch(api)
     return result;
 }
 

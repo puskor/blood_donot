@@ -22,8 +22,10 @@ export const protectedFetch = async (path) => {
     const res = await fetch(`${baseUrl}/${path}`,
         {
             headers: await authHeader()
+            
         }
     );
+    // console.log("eres",res)
     // handle 401, 403
 
     return handleStatusCode(res);

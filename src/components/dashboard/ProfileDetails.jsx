@@ -5,7 +5,7 @@ import { FaPhone, FaLocationDot, FaDroplet, FaEnvelope } from 'react-icons/fa6';
 
 export default function ProfileDetails({ donor }) {
   // ডেবুট করার জন্য কনসোল লগ
-  console.log("Donor Props Data:", donor);
+  // console.log("Donor Props Data:", donor);
 
   // প্রপ্স থেকে ডাটা ডেস্ট্রাকচার করা হলো (ডাটা না থাকলে ক্র্যাশ এড়াতে ডিফল্ট ফলব্যাক ভ্যালু সেট করা হয়েছে)
   const name = donor?.name || "Unknown Donor";
