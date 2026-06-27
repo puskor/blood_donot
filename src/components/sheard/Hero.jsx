@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { getUserSession } from '@/lib/core/session';
 
-export default function Hero() {
+export default async function Hero() {
+    const user = await getUserSession()
     return (
         <section className="w-full min-h-screen bg-pink-100  flex items-center overflow-hidden">
             <div className="max-w-7xl w-full mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 items-center py-12">
@@ -34,14 +36,14 @@ export default function Hero() {
                     {/* Action CTA Buttons */}
                     <div className="flex items-center gap-4 pt-2">
                         <Link
-                            href="/register"
+                            href={user ? `/dashboard/donor/request`:`/register`}
                             className="px-8 py-3.5 bg-rose-600 text-white font-semibold rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-600/20 font-inter text-center min-w-[140px]"
                         >
                             Donate Now
                         </Link>
 
                         <Link
-                            href="/about"
+                            href="/#"
                             className="px-8 py-3.5 bg-white text-slate-700 border border-slate-200 font-semibold rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-all font-inter text-center min-w-[140px] shadow-sm"
                         >
                             Learn More

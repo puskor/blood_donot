@@ -1,12 +1,21 @@
 import { UserPlus, Search, Droplet, Heart } from 'lucide-react';
 import StatusCard from './card/StatusCard';
+import { getTotalRequest } from '@/lib/action/get/request';
+import { getAllDonor, getTotalDonor } from '@/lib/action/get/donate';
 
 
-export default function StatsAndProcess() {
+export default async function StatsAndProcess() {
+  const reqRequest = await getTotalRequest();
+  const totalRequest = reqRequest?.pagination?.totalRequests || 0;
+   const reqDonor = await getTotalDonor();
+  const totalDonor = reqDonor?.pagination?.totalDonors || 0;
+  console.log(totalDonor)
+
+
   const stats = [
-    { value: '12,540+', label: 'Happy Donors' },
+    { value: `${totalDonor}+`, label: 'Happy Donors' },
     { value: '8,320+', label: 'Lives Saved' },
-    { value: '2,450+', label: 'Donation Requests' },
+    { value: `${totalRequest}+`, label: 'Donation Requests' },
     { value: '150+', label: 'Volunteers' },
   ];
 
@@ -22,7 +31,7 @@ export default function StatsAndProcess() {
       <div className="max-w-7xl mx-auto space-y-24">
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm grid grid-cols-2 lg:grid-cols-4 gap-8 p-8 max-w-5xl mx-auto">
           {stats.map((status, index) => (
-            <StatusCard key={index} status={status}/>
+            <StatusCard key={index} status={status} />
           ))}
         </div>
 

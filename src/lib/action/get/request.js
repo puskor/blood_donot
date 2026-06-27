@@ -7,6 +7,12 @@ export const GetRequestById = async (id) => {
     return result;
 }
 
+export const getTotalRequest = async () => {
+    const api = `api/request`;
+
+    const resData = await getData(api);
+    return resData; 
+}
 
 export const GetRequest = async (filters = {}, page = 1, limit = 9) => {
     try {

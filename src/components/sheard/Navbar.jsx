@@ -7,8 +7,10 @@ import { useSession } from '@/lib/auth-client';
 
 export default function Navbar() {
     const pathname = usePathname();
-    const {data:session} = useSession()
-    const user = session?.user ;
+    const { data: session, isPending } = useSession();
+    if (isPending) {
+        return null;
+    }
 
     const navLinks = [
         { name: 'Home', path: '/' },
@@ -54,7 +56,7 @@ export default function Navbar() {
                 {/* Action Button */}
                 <div>
                     <Link
-                        href={ user ? "/dashboard" :"/login"}
+                        href={session?.user ? "/dashboard" : "/login"}
                         className="px-6 py-2.5 bg-rose-600 text-white font-medium text-sm rounded-xl hover:bg-rose-700 transition-all shadow-md shadow-rose-600/10 font-inter"
                     >
                         Get Started

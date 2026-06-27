@@ -147,7 +147,7 @@ export default function Login() {
                     <div className="text-center pt-2">
                         <p className="text-sm text-slate-400 font-medium">
                             Don't have an account?{' '}
-                            <Link href={`/register?redirect=${redirectTo}`} className="text-rose-600 font-bold hover:text-rose-700 transition-colors">
+                            <Link href={redirectTo?`/register?redirect=${redirectTo}`:`/register`} className="text-rose-600 font-bold hover:text-rose-700 transition-colors">
                                 Register here
                             </Link>
                         </p>

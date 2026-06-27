@@ -17,7 +17,7 @@ export default function ProfileDetails({ donor }) {
   const upazila = donor?.upazila || "Not Specified";
   
   // ডেনর ইমেজ না থাকলে একটি ডিফল্ট প্লেসহোল্ডার অ্যাভাটার ইমেজ সেট হবে
-  const donorImage = donor?.image || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150";
+  const donorImage = donor?.image 
 
   return (
     <div className="w-full mx-auto max-w-md overflow-hidden rounded-3xl bg-white shadow-xl border border-slate-100 hover:shadow-2xl transition-all duration-300 font-inter">

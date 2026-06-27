@@ -1,6 +1,8 @@
+import { getUserSession } from '@/lib/core/session';
 import Link from 'next/link';
 
-export default function CalloutBanner() {
+export default async function CalloutBanner() {
+    const user = await getUserSession()
     return (
         <section className="w-full py-8 px-6 bg-pink-100">
             <div className="max-w-7xl mx-auto">
@@ -22,7 +24,7 @@ export default function CalloutBanner() {
 
                     <div className="z-10 w-full md:w-auto">
                         <Link
-                            href="/register"
+                            href={user ? `/dashboard/donor/request`:`/register`}
                             className="block w-full md:w-auto text-center px-8 py-3.5 bg-white text-rose-600 font-bold text-sm rounded-xl hover:bg-rose-50 transition-all shadow-md shadow-black/5 font-inter"
                         >
                             Donate Now

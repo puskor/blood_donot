@@ -7,6 +7,14 @@ export const GetDonorDataById = async (id) => {
     return result;
 }
 
+export const getTotalDonor = async () => {
+    const api = `api/donors`;
+    const resData = await getData(api);
+
+    return resData;
+
+}
+
 export const getAllDonor = async (filters = {}, page = 1, limit = 8) => {
     try {
         const { bloodGroup = '', division = '', district = '', upazila = '' } = filters;
@@ -24,7 +32,6 @@ export const getAllDonor = async (filters = {}, page = 1, limit = 8) => {
         const api = `api/donors?${queryString}`;
         const resData = await getData(api);
 
-        // 🌟 এবার আমরা পুরো রেসপন্স অবজেক্টটাই রিটার্ন করব, কারণ আমাদের pagination ডাটা লাগবে
         return resData;
 
     } catch (error) {

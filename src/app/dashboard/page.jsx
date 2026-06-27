@@ -6,9 +6,9 @@ const Dashboard = async () => {
 
     const user = await getUser()
     const role = user?.role
-    // console.log(user)
+    console.log(role)
 
-    if (role === "donor") {
+    if (role === "donor" || role === "user") {
         redirect("/dashboard/donor");
     }
 

@@ -12,9 +12,10 @@ import { bdGeographicData } from '@/lib/data/bd-data';
 export default function SignUp() {
     const router = useRouter();
     const searchParams = useSearchParams(); // 🌟 সার্চ প্যারামস অবজেক্ট তৈরি
-    
+
     // URL থেকে 'redirect' প্যারামিটার রিড করা হচ্ছে (যেমন: /dashboard/donor/donor_list/...)
-    const redirectTo = searchParams.get('redirect'); 
+    const redirectTo = searchParams.get('redirect');
+    console.log(redirectTo)
 
     const [formData, setFormData] = useState({
         name: '',
@@ -122,9 +123,9 @@ export default function SignUp() {
             if (serverResult.success) {
                 console.log("Database Sync Successful:", serverResult);
                 alert("Registration successful!");
-                
-                // 🌟 ডাটাবেজ সিঙ্ক সফল হলে রিডিরেক্ট কন্ডিশন চেক করা হচ্ছে
-                if (redirectTo !="null") {
+
+                // 🌟 যদি URL-এ কোনো নির্দিষ্ট রিডিরেক্ট পাথ থাকে তবে সেখানে যাবে, নাহলে ডিফল্ট ড্যাশবোর্ডে যাবে
+                if (redirectTo) {
                     router.push(redirectTo);
                 } else {
                     router.push("/dashboard");
@@ -132,7 +133,7 @@ export default function SignUp() {
             } else {
                 alert(serverResult.message || "Auth cleared but DB sync failed.");
             }
-            
+
         } catch (err) {
             console.error(err);
             alert("Registration failed");
@@ -357,8 +358,8 @@ export default function SignUp() {
                 <div className="text-center pt-2 border-t border-slate-100">
                     <p className="text-sm text-slate-400 font-medium">
                         Already have an account?{' '}
-                        <Link 
-                            href={redirectTo ? `/login?redirect=${redirectTo}` : "/login"} 
+                        <Link
+                            href={redirectTo ? `/login?redirect=${redirectTo}` : "/login"}
                             className="text-rose-600 font-bold hover:text-rose-700 transition-colors"
                         >
                             Login here

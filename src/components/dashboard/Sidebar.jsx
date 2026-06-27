@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen, onClose }) { // 🌟 মোবাই�
     const AdminItems = [
         { name: 'Dashboard', path: '/dashboard/admin', icon: RxDashboard },
         { name: 'Profile', path: '/dashboard/profile', icon: FiUser },
-        { name: 'Donor', path: '/dashboard/admin/donor', icon: FiUsers },
+        { name: 'Users', path: '/dashboard/admin/donor', icon: FiUsers },
         { name: 'Donation Requests', path: '/dashboard/admin/request', icon: FiFileText },
         { name: 'Funding Management', path: '/dashboard/funding', icon: AiOutlineDollar },
     ];

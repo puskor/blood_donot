@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import RequestCard from './card/RequestCard';
+import { GetRequest } from '@/lib/action/get/request';
 
 
-export default function RecentRequests() {
-    const requests = [
-        { id: 1, bloodGroup: 'O+', name: 'Rasel Ahmed', location: 'Dhaka, Dhanmondi', date: '20 May, 2024', status: 'Urgent Need' },
-        { id: 2, bloodGroup: 'A+', name: 'Nusrat Jahan', location: 'Chattogram, Agrabad', date: '21 May, 2024', status: 'Needed' },
-        { id: 3, bloodGroup: 'B-', name: 'Shakib Hossain', location: 'Sylhet, Zindabazar', date: '22 May, 2024', status: 'Needed' },
-    ];
+export default async function RecentRequests() {
+    const request = await GetRequest({}, 1, 3)
+    // console.log(request.data)
+
+    const requests = request.data ;
 
     return (
         <section className="w-full bg-pink-100 py-16 px-6">
@@ -21,7 +21,7 @@ export default function RecentRequests() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {requests.map((req) => (
-                            <RequestCard key={req.id} req={req}/>
+                        <RequestCard key={req._id} req={req} />
                     ))}
                 </div>
             </div>
