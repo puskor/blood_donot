@@ -9,7 +9,7 @@ export default async function StatsAndProcess() {
   const totalRequest = reqRequest?.pagination?.totalRequests || 0;
    const reqDonor = await getTotalDonor();
   const totalDonor = reqDonor?.pagination?.totalDonors || 0;
-  console.log(totalDonor)
+  // console.log(totalDonor)
 
 
   const stats = [
