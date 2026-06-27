@@ -2,25 +2,14 @@
 import { useState, useEffect } from 'react';
 import { bdGeographicData } from '@/lib/data/bd-data';
 import { GetUserDetailsById } from '@/lib/action/get/userDetailsById';
+import { UpdateUser } from '@/lib/action/update/statusUpdate'; // আপনার অ্যাকশন
 
 export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComplete }) {
 
     const [userDetails, setUserDetails] = useState(null);
+    const [avatar, setAvatar] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const fetchUsers = async () => {
-        if (!user?.id) return; 
-        const data = await GetUserDetailsById(user?.id);
-        setUserDetails(data);
-    };
-    useEffect(() => {
-        if (isOpen && user?.id) {
-            fetchUsers();
-        }
-    }, [user?.id, isOpen]); // 💡 এই দুটি পরিবর্তন হলেই কেবল এই ইফেক্টটি আবার রান করবে
-
-    console.log(userDetails)
-
-    // console.log(user)
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -34,30 +23,41 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
         confirmPassword: ''
     });
 
-    const [avatar, setAvatar] = useState(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const editUserId = userDetails?.userId;
     const isEditMode = !!user;
 
+    // ১. ইউজার আইডি দিয়ে ডাটাবেজ থেকে ফুল প্রোফাইল ফেচ করা
+    const fetchUsers = async () => {
+        if (!user?.id) return;
+        const data = await GetUserDetailsById(user?.id);
+        setUserDetails(data);
+    };
+
+    useEffect(() => {
+        if (isOpen && user?.id) {
+            fetchUsers();
+        }
+    }, [user?.id, isOpen]);
+
+    // ২. ডাটাবেজ থেকে userDetails আসার সাথে সাথে ফর্মের ডিফল্ট ভ্যালু সেট করা
     useEffect(() => {
         if (isOpen) {
-            if (isEditMode) {
-                // 📝 Edit Mode: আগের সব ডাটা (জেলা-উপজেলাসহ) ডাইরেক্ট বসানো হচ্ছে
+            if (isEditMode && userDetails) {
                 setFormData({
-                    name: user.name || '',
-                    email: user.email || '',
-                    phone: user.phone || '',
-                    bloodGroup: user.bloodGroup || '',
-                    division: user.division || '',
-                    district: user.district || '',
-                    upazila: user.upazila || '',
-                    role: user.role || 'donor',
+                    name: userDetails.name || '',
+                    email: userDetails.email || '',
+                    phone: userDetails.phone || '',
+                    bloodGroup: userDetails.bloodGroup || '',
+                    division: userDetails.division || '',
+                    district: userDetails.district || '',
+                    upazila: userDetails.upazila || '',
+                    role: userDetails.role || 'donor',
                     password: '',
                     confirmPassword: ''
                 });
                 setAvatar(null);
-            } else {
-                // ➕ Create Mode: ফর্ম একদম ফ্রেশ
+                // ❌ এখান থেকে `UpdateUser(editUserId, formData)` মুছে ফেলা হয়েছে।
+            } else if (!isEditMode) {
                 setFormData({
                     name: '',
                     email: '',
@@ -73,11 +73,11 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
                 setAvatar(null);
             }
         }
-    }, [user, isOpen]);
+    }, [userDetails, isOpen, isEditMode]);
 
     if (!isOpen) return null;
 
-    // হ্যান্ডলারসমূহ 
+    // ইনপুট হ্যান্ডলারসমূহ 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === 'phone') {
@@ -88,7 +88,6 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // যখন ডিভিশন বা ডিস্ট্রিক্ট পরিবর্তন করবেন, তখন যেন সাব-মেনুগুলো ঠিকমতো হ্যান্ডেল হয়
     const handleDivisionChange = (e) => {
         setFormData(prev => ({ ...prev, division: e.target.value, district: '', upazila: '' }));
     };
@@ -103,10 +102,10 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
         }
     };
 
+    // 💡 ৩. সাবমিট হ্যান্ডলার (এখানে UpdateUser কল করা হয়েছে)
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // ভ্যালিডেশন (শুধু ফোন নম্বর ১১ ডিজিট কি না তা চেক করবে, তাও যদি দেওয়া থাকে)
         if (formData.phone && formData.phone.length !== 11) {
             return alert("Phone number must be exactly 11 digits!");
         }
@@ -117,17 +116,24 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
 
         try {
             setIsSubmitting(true);
-            const userId = user?._id || user?.id || null;
+            const userId = user?.id || editUserId || null;
+
+            if (isEditMode && userId) {
+                // 🔄 ফর্ম সাবমিট করার সময় সার্ভার অ্যাকশন কল হবে
+                await UpdateUser(userId, formData);
+            }
+
+            // প্যারেন্ট কম্পোনেন্টকে জানানো যে কাজ শেষ
             await onUpdateComplete(isEditMode ? userId : null, formData, avatar);
             onClose();
         } catch (error) {
             console.error("Submission error:", error);
+            alert("Failed to update user!");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    // ডাটাবেজের ইউজার থেকে আসা ডিভিশন/ডিস্ট্রিক্ট অনুযায়ী অপশন লিস্ট রেডি রাখা হচ্ছে
     const availableDistricts = formData.division ? Object.keys(bdGeographicData[formData.division]?.districts || {}) : [];
     const availableUpazilas = (formData.division && formData.district) ? bdGeographicData[formData.division]?.districts[formData.district] || [] : [];
 
@@ -135,23 +141,21 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
             <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto scrollbar-thin">
 
-                {/* হেডার */}
                 <div className="flex items-center justify-between border-b pb-3">
                     <div>
                         <h3 className="text-base font-bold text-slate-900">
                             {isEditMode ? "Modify User System Ledger" : "Onboard New Secure User"}
                         </h3>
                         <p className="text-xs text-slate-400">
-                            {isEditMode ? `Account Email: ${user.email}` : "Fill down details to synchronize"}
+                            {isEditMode ? `Account Email: ${formData.email || user?.email}` : "Fill down details to synchronize"}
                         </p>
                     </div>
                 </div>
 
-                {/* ফর্ম ডাটা */}
                 <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                        {/* Name */}
+                        {/* Full Name */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Full Name</label>
                             <input
@@ -160,7 +164,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
                             />
                         </div>
 
-                        {/* Email */}
+                        {/* Email Address */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Email Address</label>
                             <input
@@ -169,7 +173,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
                             />
                         </div>
 
-                        {/* Phone */}
+                        {/* Phone Number */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Phone Number</label>
                             <input
@@ -214,7 +218,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
                             </select>
                         </div>
 
-                        {/* Role Control */}
+                        {/* System Role */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">System Role</label>
                             <select name="role" value={formData.role} onChange={handleInputChange} className="w-full h-11 px-2 border border-slate-200 rounded-xl bg-white font-semibold text-slate-700 focus:outline-none focus:border-rose-500">
@@ -224,7 +228,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
                             </select>
                         </div>
 
-                        {/* Avatar Picker */}
+                        {/* Profile Image */}
                         <div className="space-y-1.5 sm:col-span-2">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Profile Image</label>
                             <label className="w-full h-12 border border-dashed border-slate-200 hover:border-rose-500 rounded-xl px-4 flex items-center gap-3 cursor-pointer bg-white transition-colors group">
@@ -257,7 +261,6 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
 
                     </div>
 
-                    {/* বাটনসমূহ */}
                     <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
                         <button type="button" onClick={onClose} className="px-4 h-11 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50">Cancel</button>
                         <button type="submit" disabled={isSubmitting} className="px-5 h-11 rounded-xl bg-rose-600 text-white font-semibold shadow-md shadow-rose-600/10 hover:bg-rose-700 disabled:opacity-50">
