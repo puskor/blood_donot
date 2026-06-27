@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation'; // 🌟 useSearchP
 import { uploadImage } from '@/lib/uploadImage';
 import { UserDetailsPost } from '@/lib/action/post/userDetails';
 import { bdGeographicData } from '@/lib/data/bd-data';
+import toast from 'react-hot-toast';
 
 export default function SignUp() {
     const router = useRouter();
@@ -79,11 +80,11 @@ export default function SignUp() {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            return alert("Passwords do not match");
+            return toast.error("Passwords do not match");
         }
 
         if (formData.phone.length !== 11) {
-            return alert("Phone number must be exactly 11 digits");
+            return toast("Phone number must be exactly 11 digits");
         }
 
         try {
@@ -102,7 +103,7 @@ export default function SignUp() {
 
             if (error) {
                 console.log(error);
-                return alert(error.message);
+                return toast.error(error.message);
             }
 
             const details = {
@@ -122,7 +123,7 @@ export default function SignUp() {
 
             if (serverResult.success) {
                 console.log("Database Sync Successful:", serverResult);
-                alert("Registration successful!");
+                toast.success("Registration successful!");
 
                 // 🌟 যদি URL-এ কোনো নির্দিষ্ট রিডিরেক্ট পাথ থাকে তবে সেখানে যাবে, নাহলে ডিফল্ট ড্যাশবোর্ডে যাবে
                 if (redirectTo) {
@@ -131,12 +132,12 @@ export default function SignUp() {
                     router.push("/dashboard");
                 }
             } else {
-                alert(serverResult.message || "Auth cleared but DB sync failed.");
+                toast.error(serverResult.message || "Auth cleared but DB sync failed.");
             }
 
         } catch (err) {
             console.error(err);
-            alert("Registration failed");
+            toast.error("Registration failed");
         }
     };
 

@@ -6,6 +6,7 @@ import RequestListTable from './RequestListTable';
 import { UpdateRequest } from '@/lib/action/update/statusUpdate';
 import { DeleteRequestFromDB } from '@/lib/action/delete/DeleteRequestFromDB';
 import { GetRequest } from '@/lib/action/get/request';
+import toast from 'react-hot-toast';
 
 export default function VolunteerDashboardPage() {
     const [requests, setRequests] = useState([]);
@@ -37,9 +38,9 @@ export default function VolunteerDashboardPage() {
         if (response && response.success) {
             // স্টেট আপডেট: ম্যাচিং রিকোয়েস্টটিকে নতুন ডাটা দিয়ে রিপ্লেস করা হলো
             setRequests(prev => prev.map(req => req._id === id ? response.data : req));
-            alert("Request updated successfully!");
+            toast.success("Request updated successfully!");
         } else {
-            alert(response?.message || "Failed to update");
+            toast.error(response?.message || "Failed to update");
         }
     };
 
@@ -49,9 +50,9 @@ export default function VolunteerDashboardPage() {
         if (response && response.success) {
             // স্টেট থেকে রিমুভ: ফিল্টার করে ডিলিট হওয়া আইডিটি বাদ দেওয়া হলো
             setRequests(prev => prev.filter(req => req._id !== id));
-            alert("Request deleted successfully!");
+            toast.success("Request deleted successfully!");
         } else {
-            alert(response?.message || "Failed to delete");
+            toast.error(response?.message || "Failed to delete");
         }
     };
 

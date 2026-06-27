@@ -6,6 +6,7 @@ import { FaCloudArrowUp } from 'react-icons/fa6';
 import { bdGeographicData } from '@/lib/data/bd-data'; 
 import { uploadImage } from '@/lib/uploadImage'; // আপনার ইমেজ আপলোড ফাংশন
 import { UserDetailsPost } from '@/lib/action/post/userDetails'; // আপনার ডাটাবেজ আপডেট অ্যাকশন
+import toast from 'react-hot-toast';
 
 export default function EditProfileModal({ isOpen, onClose, userData, onUpdateComplete }) {
     // console.log("user",userData);
@@ -76,7 +77,7 @@ export default function EditProfileModal({ isOpen, onClose, userData, onUpdateCo
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (formData.phone.length !== 11) {
-            return alert("Phone number must be exactly 11 digits");
+            return toast("Phone number must be exactly 11 digits");
         }
 
         setIsSubmitting(true);
@@ -105,18 +106,18 @@ export default function EditProfileModal({ isOpen, onClose, userData, onUpdateCo
             const serverResult = await UserDetailsPost(updatedDetails);
 
             if (serverResult.success) {
-                alert("Profile updated successfully!");
+                toast.success("Profile updated successfully!");
                 // প্যারেন্ট কম্পোনেন্টের স্টেট আপডেট করার ফাংশন কল
                 if (onUpdateComplete) {
                     onUpdateComplete(updatedDetails);
                 }
                 onClose(); // মডাল বন্ধ করা
             } else {
-                alert(serverResult.message || "Failed to sync updates with database.");
+                toast.error(serverResult.message || "Failed to sync updates with database.");
             }
         } catch (error) {
             console.error(error);
-            alert("Something went wrong while updating profile");
+            toast.error("Something went wrong while updating profile");
         } finally {
             setIsSubmitting(false);
         }

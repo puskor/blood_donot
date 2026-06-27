@@ -8,6 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useSession } from "@/lib/auth-client";
 import { paymentPost } from "@/lib/action/post/paymentPost";
+import toast from "react-hot-toast";
 
 export default function CheckoutForm({
     amount,
@@ -28,7 +29,7 @@ export default function CheckoutForm({
         if (!stripe || !elements) return;
 
         if (!amount || Number(amount) < 5) {
-            return alert("Minimum donation is $5");
+            return toast("Minimum donation is $5");
         }
 
         setIsProcessing(true);
@@ -49,7 +50,7 @@ export default function CheckoutForm({
             const { clientSecret, error } = await checkoutRes.json();
 
             if (error) {
-                alert(error);
+                toast.error(error);
                 setIsProcessing(false);
                 return;
             }
@@ -66,7 +67,7 @@ export default function CheckoutForm({
             });
 
             if (result.error) {
-                alert(result.error.message);
+                toast.error(result.error.message);
                 setPaymentStatus("");
                 setIsProcessing(false);
                 return;
@@ -98,7 +99,7 @@ export default function CheckoutForm({
 
                 onPaymentSuccess(Number(amount), newTransaction);
 
-                alert("🎉 Payment Successful!");
+                toast.success("🎉 Payment Successful!");
 
                 setAmount("");
                 setPaymentStatus("");
@@ -107,7 +108,7 @@ export default function CheckoutForm({
             }
         } catch (error) {
             console.error(error);
-            alert("Something went wrong.");
+            toast.error("Something went wrong.");
         } finally {
             setIsProcessing(false);
         }

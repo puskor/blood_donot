@@ -5,6 +5,7 @@ import EditProfileModal from '@/components/dashboard/profile/EditProfileModal'; 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
+import toast from 'react-hot-toast';
 
 export default function ProfilePage(userDetails) {
     const router = useRouter();
@@ -48,7 +49,7 @@ export default function ProfilePage(userDetails) {
             router.refresh(); // স্টেট ও রাউটার রিফ্রেশ করার জন্য
         } catch (error) {
             console.error("Logout Failed:", error);
-            alert("Something went wrong during logout!");
+            toast.error("Something went wrong during logout!");
         }
     };
 

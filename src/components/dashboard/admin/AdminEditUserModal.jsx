@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { bdGeographicData } from '@/lib/data/bd-data';
 import { GetUserDetailsById } from '@/lib/action/get/userDetailsById';
 import { UpdateUser } from '@/lib/action/update/statusUpdate'; // আপনার অ্যাকশন
+import toast from 'react-hot-toast';
 
 export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComplete }) {
 
@@ -107,11 +108,11 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
         e.preventDefault();
 
         if (formData.phone && formData.phone.length !== 11) {
-            return alert("Phone number must be exactly 11 digits!");
+            return toast("Phone number must be exactly 11 digits!");
         }
 
         if (!isEditMode && formData.password !== formData.confirmPassword) {
-            return alert("Passwords do not match!");
+            return toast.error("Passwords do not match!");
         }
 
         try {
@@ -128,7 +129,7 @@ export default function AdminEditUserModal({ isOpen, onClose, user, onUpdateComp
             onClose();
         } catch (error) {
             console.error("Submission error:", error);
-            alert("Failed to update user!");
+            toast.error("Failed to update user!");
         } finally {
             setIsSubmitting(false);
         }

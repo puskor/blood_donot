@@ -7,6 +7,7 @@ import { FaDroplet } from 'react-icons/fa6';
 import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi';
 import { signIn } from '@/lib/auth-client';
 import { useRouter, useSearchParams } from 'next/navigation'; // 🌟 useSearchParams ইম্পোর্ট করা হয়েছে
+import toast from 'react-hot-toast';
 
 
 export default function Login() {
@@ -40,7 +41,7 @@ export default function Login() {
         });
 
         if (data) {
-            alert("Login successfully");
+            toast.success("Login successfully");
 
             // 🌟 যদি URL-এ কোনো নির্দিষ্ট রিডিরেক্ট পাথ থাকে তবে সেখানে যাবে, নাহলে ডিফল্ট ড্যাশবোর্ডে যাবে
             if (redirectTo) {
@@ -50,7 +51,7 @@ export default function Login() {
             }
         }
         if (error) {
-            alert("Something is wrong");
+            toast.error("Something is wrong");
         }
     };
 

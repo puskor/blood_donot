@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client"; // আপনার BetterAuth �
 import AdminUserTable from './AdminUserTable';
 import AdminEditUserModal from './AdminEditUserModal';
 import { uploadImage } from '@/lib/uploadImage';
+import toast from 'react-hot-toast';
 
 export default function AdminUserManagement() {
     const [usersList, setUsersList] = useState([]);
@@ -45,7 +46,7 @@ export default function AdminUserManagement() {
             });
 
             if (res?.error) {
-                alert(res.error.message);
+                toast.error(res.error.message);
                 return;
             }
 
@@ -81,7 +82,7 @@ const handleCreateOrUpdate = async (userId, formData, avatarFile) => {
             // await UserDetailsUpdate({ userId, ...formData, image: avatarUrl });
 
             setUsersList(prev => prev.map(u => u.id === userId ? { ...u, ...formData, image: avatarUrl } : u));
-            alert("User updated successfully!");
+            toast.success("User updated successfully!");
         } else {
             // ➕ CREATE MODE: ঠিক সাইন-আপ পেইজের মতোই সিকোয়েন্সিয়াল ডাটা স্টোরিং
             
@@ -95,7 +96,7 @@ const handleCreateOrUpdate = async (userId, formData, avatarFile) => {
             });
 
             if (res?.error) {
-                alert(res.error.message);
+                toast.error(res.error.message);
                 return;
             }
 
@@ -118,14 +119,14 @@ const handleCreateOrUpdate = async (userId, formData, avatarFile) => {
 
             if (serverResult.success) {
                 setUsersList(prev => [details, ...prev]);
-                alert("New user created & synced to database!");
+                toast.error("New user created & synced to database!");
             } else {
-                alert(serverResult.message || "Auth created but database sync broke down.");
+                toast.error(serverResult.message || "Auth created but database sync broke down.");
             }
         }
     } catch (error) {
-        console.error("CRUD Lifecycle Failure:", error);
-        alert("Operation failed!");
+        // console.error("CRUD Lifecycle Failure:", error);
+        toast.error("Operation failed!");
     }
 };
     // 🚨 ৪. DELETE HANDLER
@@ -136,12 +137,12 @@ const handleCreateOrUpdate = async (userId, formData, avatarFile) => {
             const res = await authClient.admin.removeUser({ userId });
 
             if (res?.error) {
-                alert(res.error.message);
+                toast.error(res.error.message);
                 return;
             }
 
             setUsersList(prev => prev.filter(user => user.id !== userId));
-            alert("User deleted successfully!");
+            toast.success("User deleted successfully!");
         } catch (error) {
             console.error("Delete Error:", error);
         }

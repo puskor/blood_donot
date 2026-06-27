@@ -4,6 +4,7 @@ import { useSession } from '@/lib/auth-client';
 import Image from 'next/image';
 import { statusUpdate } from '@/lib/action/update/statusUpdate';
 import { DonatePost } from '@/lib/action/post/donatePost';
+import toast from 'react-hot-toast';
 
 export default function RequestDetails({ requestData, requesterDetails }) {
     const { data: session } = useSession();
@@ -34,7 +35,7 @@ export default function RequestDetails({ requestData, requesterDetails }) {
         if (loading) return;
 
         if (!currentUserId) {
-            alert("Please log in to accept this donation request!");
+            toast("Please log in to accept this donation request!");
             return;
         }
 
@@ -59,17 +60,17 @@ export default function RequestDetails({ requestData, requesterDetails }) {
 
                 if (donateResult.success) {
                     setStatus(targetStatus); // UI স্টেট আপডেট
-                    alert("Thank you! You have accepted this request and the record has been saved.");
+                    toast.success("Thank you! You have accepted this request and the record has been saved.");
                 } else {
-                    alert(donateResult.message || "Failed to save donation record!");
+                    toast.error(donateResult.message || "Failed to save donation record!");
                 }
 
             } else {
-                alert(statusResult.message || "Something went wrong while updating status!");
+                toast.error(statusResult.message || "Something went wrong while updating status!");
             }
         } catch (error) {
-            console.error("Client Submit Error:", error);
-            alert("Failed to connect to server.");
+            // console.error("Client Submit Error:", error);
+            toast.error("Failed to connect to server.");
         } finally {
             setLoading(false);
         }
