@@ -1,15 +1,12 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaDroplet } from 'react-icons/fa6';
 import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi';
-import { signIn } from '@/lib/auth-client';
-import { useRouter, useSearchParams } from 'next/navigation'; // 🌟 useSearchParams ইম্পোর্ট করা হয়েছে
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-
-
 export default function Login() {
 
     const router = useRouter();
