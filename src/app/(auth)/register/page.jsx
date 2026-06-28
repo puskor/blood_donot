@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaDroplet, FaCloudArrowUp } from 'react-icons/fa6';
 import { signUp } from '@/lib/auth-client';
-import { useRouter, useSearchParams } from 'next/navigation'; // 🌟 useSearchParams ইম্পোর্ট করা হলো
+import { useRouter } from 'next/navigation';
 import { uploadImage } from '@/lib/uploadImage';
 import { UserDetailsPost } from '@/lib/action/post/userDetails';
 import { bdGeographicData } from '@/lib/data/bd-data';
@@ -12,11 +12,13 @@ import toast from 'react-hot-toast';
 
 export default function SignUp() {
     const router = useRouter();
-    const searchParams = useSearchParams(); // 🌟 সার্চ প্যারামস অবজেক্ট তৈরি
+    const [redirectTo, setRedirectTo] = useState('');
 
-    // URL থেকে 'redirect' প্যারামিটার রিড করা হচ্ছে (যেমন: /dashboard/donor/donor_list/...)
-    const redirectTo = searchParams.get('redirect');
-    console.log(redirectTo)
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        if (redirect) setRedirectTo(redirect);
+    }, []);
 
     const [formData, setFormData] = useState({
         name: '',

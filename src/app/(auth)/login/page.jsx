@@ -13,10 +13,15 @@ import toast from 'react-hot-toast';
 export default function Login() {
 
     const router = useRouter();
-    const searchParams = useSearchParams(); // 🌟 সার্চ প্যারামস অবজেক্ট তৈরি
+    const [redirectTo, setRedirectTo] = useState('');
 
-    // URL থেকে 'redirect' প্যারামিটার রিড করা হচ্ছে (যেমন: /dashboard/donor/donor_list/...)
-    const redirectTo = searchParams.get('redirect');
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get('redirect');
+        if (redirect) {
+            setRedirectTo(redirect);
+        }
+    }, []);
 
     const [formData, setFormData] = useState({
         email: '',
@@ -148,7 +153,7 @@ export default function Login() {
                     <div className="text-center pt-2">
                         <p className="text-sm text-slate-400 font-medium">
                             Don't have an account?{' '}
-                            <Link href={redirectTo?`/register?redirect=${redirectTo}`:`/register`} className="text-rose-600 font-bold hover:text-rose-700 transition-colors">
+                            <Link href={redirectTo ? `/register?redirect=${redirectTo}` : `/register`} className="text-rose-600 font-bold hover:text-rose-700 transition-colors">
                                 Register here
                             </Link>
                         </p>
