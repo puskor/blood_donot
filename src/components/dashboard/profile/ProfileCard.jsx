@@ -11,7 +11,7 @@ export default function ProfileCard({ user , onEditClick, onLogout }) {
     const phone = user?.userDetails?.phone ||"N/A"
     const image = user?.userDetails?.image ||"N/A"
     const createdAt = user?.userDetails?.createdAt ||"N/A"
-    const role = user?.userDetails?.role ||"N/A"
+    const role = user?.userRole ||"N/A"
 
     const upazila = user?.userDetails?.upazila ||"N/A"
     const district = user?.userDetails?.district ||"N/A"

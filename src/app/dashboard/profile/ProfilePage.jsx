@@ -7,15 +7,17 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import toast from 'react-hot-toast';
 
-export default function ProfilePage(userDetails) {
+export default function ProfilePage(userDetails,userRole) {
     const router = useRouter();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ২. এডিট প্রোফাইল মডাল স্টেট
 
     // ৩. ইউজারের ডেটাকে রিঅ্যাক্ট স্টেটে নেওয়া হলো যেন এডিট করলে সাথে সাথে UI-তে আপডেট দেখায়
     const [userData, setUserData] = useState({
-        ...userDetails
-
+        ...userDetails,
+        ...userRole
     });
+
+    // console.log(userData);
 
 
     // নতুন রিকোয়েস্ট সাবমিট হ্যান্ডলার
@@ -30,15 +32,16 @@ export default function ProfilePage(userDetails) {
         };
 
         setMyRequests(prev => [formattedRequest, ...prev]);
-        console.log("Newly Saved Data to push in Backend:", newRequestData);
+        // console.log("Newly Saved Data to push in Backend:", newRequestData);
     };
 
     // ৪. প্রোফাইল সাকসেসফুলি আপডেট হওয়ার পর মেইন পেজের স্টেট আপডেট করার ফাংশন
-    const handleProfileUpdateComplete = (updatedDetails) => {
-        setUserData(prev => ({
-            ...prev,
-            ...updatedDetails
-        }));
+    const handleProfileUpdateComplete =async (updatedDetails) => {
+        console.log(updatedDetails)
+        // setUserData(prev => ({
+        //     ...prev,
+        //     ...updatedDetails
+        // }));
     };
 
     // ৫. লগআউট হ্যান্ডলার ফাংশন
