@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FaDroplet, FaCloudArrowUp } from 'react-icons/fa6';
+import { FaDroplet, FaCloudArrowUp, FaEye, FaEyeSlash } from 'react-icons/fa6';
 import { signUp } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { uploadImage } from '@/lib/uploadImage';
@@ -13,6 +13,10 @@ import toast from 'react-hot-toast';
 export default function SignUp() {
     const router = useRouter();
     const [redirectTo, setRedirectTo] = useState('');
+
+    // 🌟 পাসওয়ার্ড দেখানো বা লুকানোর স্টেট
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -78,15 +82,36 @@ export default function SignUp() {
         }
     };
 
+    // 🌟 ক্লায়েন্ট সাইড পাসওয়ার্ড ভ্যালিডেশন পলিসি
+    const validatePassword = (password) => {
+        const minLength = password.length >= 8;
+        const hasNumber = /\d/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasLower = /[a-z]/.test(password);
+
+        if (!minLength) return "Password must be at least 8 characters long.";
+        if (!hasNumber) return "Password must contain at least one number.";
+        if (!hasUpper) return "Password must contain at least one uppercase letter.";
+        if (!hasLower) return "Password must contain at least one lowercase letter.";
+        return null;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // ১. পাসওয়ার্ড ম্যাচিং ভ্যালিডেশন
         if (formData.password !== formData.confirmPassword) {
             return toast.error("Passwords do not match");
         }
 
+        // 🌟 ২. পাসওয়ার্ড স্ট্রেন্থ পলিসি চেক
+        const passwordError = validatePassword(formData.password);
+        if (passwordError) {
+            return toast.error(passwordError);
+        }
+
         if (formData.phone.length !== 11) {
-            return toast("Phone number must be exactly 11 digits");
+            return toast.error("Phone number must be exactly 11 digits");
         }
 
         try {
@@ -96,6 +121,7 @@ export default function SignUp() {
                 avatarUrl = await uploadImage(avatar);
             }
 
+            // BetterAuth ইন্টারনাল সিকিউরড সাইন আপ (পাসওয়ার্ড অটোমেটিক ব্যাকএন্ডে হ্যাশ হবে)
             const { data, error } = await signUp.email({
                 email: formData.email,
                 password: formData.password,
@@ -127,7 +153,6 @@ export default function SignUp() {
                 console.log("Database Sync Successful:", serverResult);
                 toast.success("Registration successful!");
 
-                // 🌟 যদি URL-এ কোনো নির্দিষ্ট রিডিরেক্ট পাথ থাকে তবে সেখানে যাবে, নাহলে ডিফল্ট ড্যাশবোর্ডে যাবে
                 if (redirectTo) {
                     router.push(redirectTo);
                 } else {
@@ -302,32 +327,50 @@ export default function SignUp() {
                             </label>
                         </div>
 
-                        {/* Password */}
-                        <div className="space-y-1.5">
+                        {/* 🌟 Secure Password Input (With Toggle Eye) */}
+                        <div className="space-y-1.5 relative">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Password</label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleInputChange}
-                                placeholder="Enter your password"
-                                required
-                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 placeholder-slate-300 transition-all font-medium text-slate-800"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    placeholder="Min 8 chars, 1 uppercase, 1 number"
+                                    required
+                                    className="w-full h-11 pl-4 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 placeholder-slate-300 transition-all font-medium text-slate-800"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                >
+                                    {showPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Confirm Password */}
-                        <div className="space-y-1.5">
+                        {/* 🌟 Secure Confirm Password Input (With Toggle Eye) */}
+                        <div className="space-y-1.5 relative">
                             <label className="text-xs font-bold text-slate-700 tracking-wide">Confirm Password</label>
-                            <input
-                                type="password"
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleInputChange}
-                                placeholder="Confirm your password"
-                                required
-                                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 placeholder-slate-300 transition-all font-medium text-slate-800"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    placeholder="Re-enter your password"
+                                    required
+                                    className="w-full h-11 pl-4 pr-10 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600/20 placeholder-slate-300 transition-all font-medium text-slate-800"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                >
+                                    {showConfirmPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+                                </button>
+                            </div>
                         </div>
 
                     </div>
@@ -357,7 +400,6 @@ export default function SignUp() {
                     </button>
                 </form>
 
-                {/* 🌟 ফিক্স: নিচের লগইন লিংকেও যেন রিডিরেক্ট প্যারামিটার পাস হয় */}
                 <div className="text-center pt-2 border-t border-slate-100">
                     <p className="text-sm text-slate-400 font-medium">
                         Already have an account?{' '}
