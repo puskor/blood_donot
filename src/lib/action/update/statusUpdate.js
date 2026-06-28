@@ -1,5 +1,5 @@
 import { serverMutation } from "@/lib/core/secure"
-import { updateData } from "@/lib/core/update"
+
 
 export const statusUpdate = async (requestId, donorId, status) => {
 
@@ -9,7 +9,7 @@ export const statusUpdate = async (requestId, donorId, status) => {
         status: status
     }
 
-    const result = await updateData(api, data)
+    const result = await serverMutation(api, data,"PATCH")
     return result
 
 }
@@ -23,8 +23,9 @@ export const UpdateRequest = async (id, updateData) => {
 
 };
 
+
 export const UpdateUser = async (id, updateData) => {
     const api = `api/user/save-details/${id}`
-    const result = await serverMutation(api, updateData, "PUT")
+    const result = await serverMutation(api, updateData, "PATCH")
     return result;
 }

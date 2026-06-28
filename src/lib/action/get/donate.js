@@ -10,9 +10,7 @@ export const GetDonorDataById = async (id) => {
 export const getTotalDonor = async () => {
     const api = `api/donors`;
     const resData = await getData(api);
-
     return resData;
-
 }
 
 export const getAllDonor = async (filters = {}, page = 1, limit = 8) => {

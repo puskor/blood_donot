@@ -7,7 +7,7 @@ export default async function RecentRequests() {
     const request = await GetRequest({}, 1, 3)
     // console.log(request.data)
 
-    const requests = request.data ;
+    const requests = request?.data ;
 
     return (
         <section className="w-full bg-pink-100 py-16 px-6">

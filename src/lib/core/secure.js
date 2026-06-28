@@ -13,8 +13,7 @@ export const authHeader = async () => {
 }
 
 export const serverFetch = async (path) => {
-    const res = await fetch(`${baseUrl}${path}`);
-
+    const res = await fetch(`${baseUrl}/${path}`);
     return handleStatusCode(res);
 }
 
@@ -25,14 +24,13 @@ export const protectedFetch = async (path) => {
             
         }
     );
-    // console.log("eres",res)
-    // handle 401, 403
 
     return handleStatusCode(res);
 }
 
 
 export const serverMutation = async (path, data, method = 'POST') => {
+    
     const res = await fetch(`${baseUrl}/${path}`, {
         method: method,
         headers: {
@@ -41,6 +39,7 @@ export const serverMutation = async (path, data, method = 'POST') => {
         },
         body: JSON.stringify(data),
     });
+   
 
     return handleStatusCode(res);
 }

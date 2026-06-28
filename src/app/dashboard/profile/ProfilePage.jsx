@@ -6,8 +6,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import toast from 'react-hot-toast';
+import { UpdateUser } from '@/lib/action/update/statusUpdate';
 
-export default function ProfilePage(userDetails,userRole) {
+export default function ProfilePage(userDetails, userRole) {
     const router = useRouter();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ২. এডিট প্রোফাইল মডাল স্টেট
 
@@ -17,7 +18,7 @@ export default function ProfilePage(userDetails,userRole) {
         ...userRole
     });
 
-    // console.log(userData);
+    const userId = userData?.userDetails?.userId
 
 
     // নতুন রিকোয়েস্ট সাবমিট হ্যান্ডলার
@@ -36,12 +37,8 @@ export default function ProfilePage(userDetails,userRole) {
     };
 
     // ৪. প্রোফাইল সাকসেসফুলি আপডেট হওয়ার পর মেইন পেজের স্টেট আপডেট করার ফাংশন
-    const handleProfileUpdateComplete =async (updatedDetails) => {
-        console.log(updatedDetails)
-        // setUserData(prev => ({
-        //     ...prev,
-        //     ...updatedDetails
-        // }));
+    const handleProfileUpdateComplete = async (updatedDetails) => {
+        const result = await UpdateUser(userId, updatedDetails)
     };
 
     // ৫. লগআউট হ্যান্ডলার ফাংশন
