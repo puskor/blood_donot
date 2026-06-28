@@ -7,6 +7,7 @@ import { FaDroplet } from 'react-icons/fa6';
 import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { signIn } from '@/lib/auth-client';
 export default function Login() {
 
     const router = useRouter();
