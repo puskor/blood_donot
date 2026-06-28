@@ -14,7 +14,7 @@ export default async function RecentRequests() {
             <div className="max-w-7xl mx-auto space-y-10">
                 <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-slate-950 font-poppins">Recent Donation Requests</h2>
-                    <Link href="/requests" className="text-sm font-semibold text-rose-600 hover:text-rose-700 font-inter transition-colors">
+                    <Link href="/request" className="text-sm font-semibold text-rose-600 hover:text-rose-700 font-inter transition-colors">
                         View All
                     </Link>
                 </div>
